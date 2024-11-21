@@ -3,8 +3,6 @@
 declare(strict_types=1);
 
 use App\Http\Controllers\Api\AuthController;
-use App\Http\Controllers\Api\ChallengeController;
-use App\Http\Controllers\Api\TeamController;
 use App\Http\Controllers\Api\TelegramController;
 use App\Http\Controllers\Api\UserController;
 use Illuminate\Support\Facades\Route;
