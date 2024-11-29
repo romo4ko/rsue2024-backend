@@ -19,7 +19,7 @@ class AuthController extends Controller
 
     public function auth(UserAuthDTO $userAuthDTO): array|JsonResponse
     {
-        $user = User::query()->where('email', $userAuthDTO->email)->firstOrFail();
+        $user = User::query()->where('login', $userAuthDTO->login)->firstOrFail();
 
         return $this->authService->auth($user, $userAuthDTO);
     }
