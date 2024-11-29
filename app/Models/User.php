@@ -7,16 +7,17 @@ namespace App\Models;
 use Filament\Models\Contracts\FilamentUser;
 use Filament\Panel;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable implements FilamentUser
 {
     use HasFactory;
     use Notifiable;
     use HasApiTokens;
+    use HasRoles;
 
     protected $fillable = [
         'name',
@@ -26,6 +27,7 @@ class User extends Authenticatable implements FilamentUser
         'password',
         'about',
         'image',
+        'login',
         'is_admin',
         'is_confirmed',
         'telegram_username',
