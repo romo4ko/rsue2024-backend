@@ -21,14 +21,14 @@ class UsersSeeder extends Seeder
             'is_admin' => true,
         ]);
 
-        if(Role::query()->count() === 0) {
+        if (Role::query()->count() === 0) {
             Role::create(['name' => Roles::Teacher->value]);
             Role::create(['name' => Roles::Parent->value]);
             Role::create(['name' => Roles::Student->value]);
         }
 
         User::all()->where('is_admin', false)->each(function ($user) {
-           $user->assignRole(Role::all()->random()->name);
+            $user->assignRole(Role::all()->random()->name);
         });
     }
 }
