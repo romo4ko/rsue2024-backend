@@ -13,6 +13,7 @@ Route::post('auth', [AuthController::class, 'auth'])->name('auth.auth');
 Route::group(['middleware' => ['auth:sanctum']], static function () {
     Route::group(['prefix' => 'users'], static function () {
         Route::get('/{id}/childrens', [UserController::class, 'childrens'])->name('users.childrens');
+        Route::get('/{id}/achievements', [UserController::class, 'achievements'])->name('users.achievements');
         Route::get('/{id}', [UserController::class, 'show'])->name('users.show');
         Route::post('/{id}', [UserController::class, 'update'])->name('users.update');
     });
