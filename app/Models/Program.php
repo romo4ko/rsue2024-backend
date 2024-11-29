@@ -14,11 +14,13 @@ class Program extends Model
         'name',
         'description',
         'image',
+        'min_student_age',
+        'max_student_age',
     ];
 
-    public function teachers(): HasMany
+    public function users(): BelongsToMany
     {
-        return $this->hasMany(User::class, 'teacher_id');
+        return $this->belongsToMany(User::class);
     }
 
     public function lessons(): HasMany

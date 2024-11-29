@@ -64,9 +64,9 @@ class User extends Authenticatable implements FilamentUser
         'full_name',
     ];
 
-    public function programs(): HasMany
+    public function programs(): BelongsToMany
     {
-        return $this->hasMany(Program::class, 'program_id');
+        return $this->belongsToMany(Program::class);
     }
 
     public function getFullNameAttribute(): string

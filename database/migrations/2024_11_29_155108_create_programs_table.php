@@ -16,6 +16,8 @@ return new class extends Migration
             $table->string('name');
             $table->string('description');
             $table->string('image')->nullable();
+            $table->integer('min_student_age')->default(0);
+            $table->integer('max_student_age')->default(15);
             $table->timestamps();
         });
     }
