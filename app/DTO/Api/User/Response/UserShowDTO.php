@@ -3,13 +3,15 @@
 namespace App\DTO\Api\User\Response;
 
 use App\Models\User;
+use Illuminate\Support\Collection;
 use Spatie\LaravelData\Data;
 
 class UserShowDTO extends Data
 {
     public function __construct(
         public User $user,
-        public bool $isEditor
+        public bool $isEditor,
+        public Collection $role
     ){
     }
 
@@ -17,7 +19,8 @@ class UserShowDTO extends Data
     {
         return new self(
             $user,
-            $user->id === auth()->id()
+            $user->id === auth()->id(),
+            $user->getRoleNames()
         );
     }
 }
