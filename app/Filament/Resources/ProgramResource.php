@@ -11,8 +11,6 @@ use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class ProgramResource extends Resource
 {
@@ -45,13 +43,14 @@ class ProgramResource extends Resource
                 Forms\Components\FileUpload::make('image')
                     ->label('Изображение')
                     ->image(),
-                Forms\Components\Select::make('teachers')
+                Forms\Components\Select::make('user_id')
                     ->label('Преподаватели')
                     ->multiple()
                     ->preload()
-                    ->relationship('teachers')
-                    ->getOptionLabelFromRecordUsing(fn (User $record) => "{$record->name} {$record->surname}")
-
+                    ->relationship('users', 'name')
+                    ->options(
+                        User::role('teacher')->get()->pluck('full_name', 'id')
+                    )
             ]);
     }
 

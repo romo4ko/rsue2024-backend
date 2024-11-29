@@ -16,9 +16,9 @@ class Program extends Model
         'image',
     ];
 
-    public function teachers(): HasMany
+    public function users(): BelongsToMany
     {
-        return $this->hasMany(User::class, 'teacher_id');
+        return $this->belongsToMany(User::class);
     }
 
     public function lessons(): HasMany
