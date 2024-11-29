@@ -27,6 +27,7 @@ class UserFactory extends Factory
     {
         return [
             'name' => fake()->name(),
+            'login' => fake()->name(),
             'surname' => fake()->lastName(),
             'about' => fake()->text(),
             'is_confirmed' => true,

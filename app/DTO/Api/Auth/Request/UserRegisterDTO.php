@@ -13,9 +13,11 @@ class UserRegisterDTO extends Data
     public function __construct(
         public string $name,
         public string $surname,
-        public string $email,
+        public ?string $email,
         public string $password,
         public string $patronymic,
+        public string $login,
+        public string $role,
     ) {
     }
 
@@ -31,7 +33,6 @@ class UserRegisterDTO extends Data
                 'max:255',
             ],
             'email'      => [
-                'required',
                 'max:255',
                 'email',
                 Rule::unique('users', 'email'),
@@ -44,6 +45,15 @@ class UserRegisterDTO extends Data
             'patronymic' => [
                 'required',
                 'max:255',
+            ],
+            'login' => [
+                'required',
+                'max:255',
+                Rule::unique('users', 'login')
+            ],
+            'role' => [
+                'required',
+                Rule::exists('roles', 'name'),
             ]
         ];
     }

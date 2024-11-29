@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\DTO\Api\Auth\Response;
 
 use App\Models\User;
+use Illuminate\Support\Collection;
 use Spatie\LaravelData\Data;
 
 class UserAuthShowDTO extends Data
@@ -12,6 +13,7 @@ class UserAuthShowDTO extends Data
     public function __construct(
         public User $user,
         public string $token,
+        public Collection $role,
     ) {
     }
 
@@ -19,7 +21,8 @@ class UserAuthShowDTO extends Data
     {
         return new self(
             $user,
-            $token
+            $token,
+            $user->getRoleNames()
         );
     }
 }

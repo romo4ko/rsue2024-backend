@@ -10,7 +10,7 @@ use Spatie\LaravelData\Data;
 class UserAuthDTO extends Data
 {
     public function __construct(
-        public string $email,
+        public string $login,
         public string $password,
     ) {
     }
@@ -18,10 +18,9 @@ class UserAuthDTO extends Data
     public static function rules(ValidationContext $context): array
     {
         return [
-            'email'      => [
+            'login'      => [
                 'required',
                 'max:255',
-                'email',
             ],
             'password'   => [
                 'required',
