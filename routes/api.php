@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\ProgramController;
 use App\Http\Controllers\Api\TelegramController;
 use App\Http\Controllers\Api\UserController;
 use Illuminate\Support\Facades\Route;
@@ -16,6 +17,11 @@ Route::group(['middleware' => ['auth:sanctum']], static function () {
         Route::get('/{id}/achievements', [UserController::class, 'achievements'])->name('users.achievements');
         Route::get('/{id}', [UserController::class, 'show'])->name('users.show');
         Route::post('/{id}', [UserController::class, 'update'])->name('users.update');
+    });
+
+    Route::group(['prefix' => 'programs'], static function () {
+        Route::get('/{id}', [ProgramController::class, 'show'])->name('programs.show');
+        Route::get('/', [ProgramController::class, 'list'])->name('programs.list');
     });
 });
 

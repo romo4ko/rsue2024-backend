@@ -12,7 +12,7 @@ class UserShowDTO extends Data
         public User $user,
         public bool $isEditor,
         public Collection $role
-    ){
+    ) {
     }
 
     public static function fromModel(User $user): self
