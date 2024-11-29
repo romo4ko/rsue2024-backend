@@ -14,6 +14,8 @@ class Program extends Model
         'name',
         'description',
         'image',
+        'min_student_age',
+        'max_student_age',
     ];
 
     public function users(): BelongsToMany

@@ -50,7 +50,21 @@ class ProgramResource extends Resource
                     ->relationship('users', 'name')
                     ->options(
                         User::role('teacher')->get()->pluck('full_name', 'id')
-                    )
+                    ),
+                Forms\Components\TextInput::make('min_student_age')
+                    ->label('Минимальный возраст ученика')
+                    ->numeric()
+                    ->default(0)
+                    ->minValue(0)
+                    ->maxValue(99)
+                    ->maxWidth('xs'),
+                Forms\Components\TextInput::make('max_student_age')
+                    ->label('Максимальный возраст ученика')
+                    ->numeric()
+                    ->default(15)
+                    ->minValue(0)
+                    ->maxValue(99)
+                    ->maxWidth('xs'),
             ]);
     }
 
