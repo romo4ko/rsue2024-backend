@@ -55,4 +55,9 @@ class UserService
 
         return $childrens->get()->toArray();
     }
+
+    public function achievements(User $user): array
+    {
+        return $user->achievements()->get()->toArray();
+    }
 }
