@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('programs', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('description');
+            $table->text('description');
             $table->string('image')->nullable();
             $table->integer('min_student_age')->default(0);
             $table->integer('max_student_age')->default(15);
