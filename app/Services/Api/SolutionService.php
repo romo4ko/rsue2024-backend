@@ -15,30 +15,8 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
 
-class ProgramService
+class SolutionService
 {
-    public function signUp(Program $program, ProgramSignUpDTO $programSignUpDTO): array|JsonResponse
-    {
-        $user = User::query()->find($programSignUpDTO->userId);
-
-        if (auth()->id() === $user?->parent_id) {
-            if ($user?->roles->pluck('name')[0] === Roles::Student->value) {
-                $program->users()->attach($user);
-
-                return ProgramShowDTO::from($program)->toArray();
-            }
-
-            return response()->json(['message' => 'Пользователь не может быть записан на курс так как он не студент'], 403);
-        }
-
-        return response()->json(['message' => 'Вы не являетесь родителм данного ребенка'], 403);
-    }
-
-    public function show(Program $program): array
-    {
-        return ProgramShowDTO::from($program)->toArray();
-    }
-
     public function storeLesson(Program $program, ProgramStoreLessonDTO $programStoreLessonDTO): array|JsonResponse
     {
 
