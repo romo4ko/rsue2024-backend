@@ -37,7 +37,7 @@ class UserController extends Controller
         return $this->userService->childrens($user);
     }
 
-    public function achievements(int $id): array
+    public function achievements(int $id): array|JsonResponse
     {
         $user = User::query()->findOrFail($id);
 

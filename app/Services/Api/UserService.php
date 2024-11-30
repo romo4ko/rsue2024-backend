@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Services\Api;
 
 use App\DTO\Api\User\Request\UserUpdateDTO;
+use App\DTO\Api\User\Response\AchievementShowDTO;
 use App\DTO\Api\User\Response\UserShowDTO;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
@@ -58,6 +59,10 @@ class UserService
 
     public function achievements(User $user): array
     {
-        return $user->achievements()->get()->toArray();
+        $achievements = $user->achievements()->get();
+
+        return $achievements->map(
+            fn($achievement) => AchievementShowDTO::fromModel($achievement)
+        )->toArray();
     }
 }

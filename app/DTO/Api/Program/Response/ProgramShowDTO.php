@@ -2,8 +2,9 @@
 
 namespace App\DTO\Api\Program\Response;
 
+use App\DTO\Api\User\Response\UserShowDTO;
 use App\Models\Program;
-use Carbon\Carbon;
+use Illuminate\Support\Collection;
 use Spatie\LaravelData\Data;
 
 class ProgramShowDTO extends Data
@@ -17,6 +18,7 @@ class ProgramShowDTO extends Data
         public int $max_student_age,
         public string $created_at,
         public string $updated_at,
+        public ?Collection $teachers
     ){
     }
 
@@ -31,6 +33,9 @@ class ProgramShowDTO extends Data
             $program->max_student_age,
             $program->created_at->toIso8601String(),
             $program->updated_at->toIso8601String(),
+            $program->users?->map(
+                fn($teacher) => UserShowDTO::fromModel($teacher)
+            )
         );
     }
 }
