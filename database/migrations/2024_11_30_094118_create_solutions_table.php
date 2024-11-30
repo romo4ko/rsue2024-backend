@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->binary('answer')->nullable();
             $table->integer('mark')->nullable();
+            $table->text('comment')->nullable();
             $table->foreignId('student_id')->constrained('users')->cascadeOnDelete();
             $table->foreignId('teacher_id')->nullable()->constrained('users')->cascadeOnDelete();
             $table->foreignId('exercise_id')->constrained('exercises')->cascadeOnDelete();
