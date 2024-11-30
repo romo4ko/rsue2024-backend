@@ -35,6 +35,7 @@ class User extends Authenticatable implements FilamentUser
         'is_confirmed',
         'telegram_username',
         'telegram_id',
+        'balance',
     ];
 
     /**
@@ -67,12 +68,12 @@ class User extends Authenticatable implements FilamentUser
 
     public function programs(): BelongsToMany
     {
-        return $this->belongsToMany(Program::class);
+        return $this->belongsToMany(Program::class, 'program_user');
     }
 
-    public function lessons(): HasMany
+    public function lessons(): BelongsToMany
     {
-        return $this->hasMany(Lesson::class);
+        return $this->belongsToMany(Lesson::class, 'user_lesson');
     }
 
     public function getFullNameAttribute(): string

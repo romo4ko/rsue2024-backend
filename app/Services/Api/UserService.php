@@ -7,6 +7,7 @@ namespace App\Services\Api;
 use App\DTO\Api\User\Request\UserUpdateDTO;
 use App\DTO\Api\User\Response\AchievementShowDTO;
 use App\DTO\Api\User\Response\UserShowDTO;
+use App\Models\Lesson;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Storage;
@@ -48,6 +49,17 @@ class UserService
         }
 
         return response()->json(['message' => 'just meme'], 403);
+    }
+
+    public function handleLesson(User $user, int $programId, int $lessonId): JsonResponse
+    {
+        $lesson = Lesson::query()->where('id', $lessonId)->where('program_id', $programId)->firstOrFail();
+
+        $user->lessons()->attach($lesson);
+        $user->balance += $lesson->points ?? 0;
+        $user->save();
+
+        return new JsonResponse();
     }
 
     public function childrens(User $user): array
