@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('name');
             $table->binary('theory')->nullable();
             $table->foreignId('program_id')->constrained('programs')->cascadeOnDelete();
-            $table->integer('points')->nullable();
+            $table->integer('points')->default(1);
             $table->timestamps();
         });
     }

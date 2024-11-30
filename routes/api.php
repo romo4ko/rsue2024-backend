@@ -20,6 +20,7 @@ Route::group(['middleware' => ['auth:sanctum']], static function () {
         Route::get('/{user_id}/childrens-marks', [SolutionController::class, 'childrensMarks'])->name('marks.childrensMarks');
         Route::get('/{id}', [UserController::class, 'show'])->name('users.show');
         Route::post('/{id}', [UserController::class, 'update'])->name('users.update');
+        Route::post('/{id}/programs/{program_id}/lessons/{lesson_id}', [UserController::class, 'handleLesson'])->name('users.handleLesson');
     });
 
     Route::group(['prefix' => 'programs'], static function () {
