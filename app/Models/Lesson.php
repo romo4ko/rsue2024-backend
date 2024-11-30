@@ -29,6 +29,11 @@ class Lesson extends Model
         return $this->hasMany(User::class, 'teacher_id');
     }
 
+    public function users(): BelongsToMany
+    {
+        return $this->belongsToMany(User::class);
+    }
+
     public function program(): BelongsTo
     {
         return $this->belongsTo(Program::class);
