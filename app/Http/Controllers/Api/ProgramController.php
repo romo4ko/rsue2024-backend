@@ -23,6 +23,13 @@ class ProgramController extends Controller
         return $this->programService->signUp($program, $programSignUpDTO);
     }
 
+    public function lessons(int $id): array
+    {
+        $program = Program::query()->findOrFail($id);
+
+        return $program?->lessons->toArray();
+    }
+
     public function show(int $id): array
     {
         $program = Program::query()->findOrFail($id);
