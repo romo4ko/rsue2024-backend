@@ -22,9 +22,10 @@ class UsersSeeder extends Seeder
         ]);
 
         if (Role::query()->count() === 0) {
-            Role::create(['name' => Roles::Teacher->value]);
-            Role::create(['name' => Roles::Parent->value]);
-            Role::create(['name' => Roles::Student->value]);
+            Role::create(['name' => Roles::TEACHER->value]);
+            Role::create(['name' => Roles::PARENT->value]);
+            Role::create(['name' => Roles::STUDENT->value]);
+            Role::create(['name' => Roles::ADMIN->value]);
         }
 
         User::all()->where('is_admin', false)->each(function ($user) {

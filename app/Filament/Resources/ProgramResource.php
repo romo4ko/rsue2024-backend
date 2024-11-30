@@ -78,6 +78,7 @@ class ProgramResource extends Resource
                     ->sortable(),
                 Tables\Columns\TextColumn::make('description')
                     ->label('Описание')
+                    ->limit(40)
                     ->searchable(),
                 Tables\Columns\ImageColumn::make('image')
                     ->label('Изображение'),

@@ -29,7 +29,7 @@ class ProgramService
         $user = User::query()->find($programSignUpDTO->userId);
 
         if (auth()->id() === $user?->parent_id) {
-            if ($user?->roles->pluck('name')[0] === Roles::Student->value) {
+            if ($user?->roles->pluck('name')[0] === Roles::STUDENT->value) {
                 $program->users()->attach($user);
 
                 return ProgramShowDTO::from($program)->toArray();
@@ -48,7 +48,7 @@ class ProgramService
 
     public function storeExercises(Program $program, int $lessonId, ProgramStoreExerciseDTO $programStoreExerciseDTO): array|JsonResponse
     {
-        if (auth()->user()?->roles->pluck('name')[0] !== Roles::Teacher->value) {
+        if (auth()->user()?->roles->pluck('name')[0] !== Roles::TEACHER->value) {
             return response()->json(['message' => 'Пользователь не может создать задание для урока так как он не учитель'], 403);
         }
 
@@ -70,7 +70,7 @@ class ProgramService
 
     public function storeLesson(Program $program, ProgramStoreLessonDTO $programStoreLessonDTO): array|JsonResponse
     {
-        if (auth()->user()?->roles->pluck('name')[0] !== Roles::Teacher->value) {
+        if (auth()->user()?->roles->pluck('name')[0] !== Roles::TEACHER->value) {
             return response()->json(['message' => 'Пользователь не может создать урок так как он не учитель'], 403);
         }
 
@@ -87,7 +87,7 @@ class ProgramService
 
     public function removeLesson(Program $program, int $lessonId):  JsonResponse|Response
     {
-        if (auth()->user()?->roles->pluck('name')[0] !== Roles::Teacher->value) {
+        if (auth()->user()?->roles->pluck('name')[0] !== Roles::TEACHER->value) {
             return response()->json(['message' => 'Пользователь не может удалить урок так как он не учитель'], 403);
         }
 
@@ -104,7 +104,7 @@ class ProgramService
 
     public function removeExercises(Program $program, int $lessonId, int $exerciseId): JsonResponse|Response
     {
-        if (auth()->user()?->roles->pluck('name')[0] !== Roles::Teacher->value) {
+        if (auth()->user()?->roles->pluck('name')[0] !== Roles::TEACHER->value) {
             return response()->json(['message' => 'Пользователь не может удалить задание так как он не учитель'], 403);
         }
 
@@ -122,7 +122,7 @@ class ProgramService
 
     public function solutionsSolve(Program $program, int $lessonId, int $exerciseId, SolutionSolveDTO $solutionSolveDTO): JsonResponse|Response|array
     {
-        if (auth()->user()?->roles->pluck('name')[0] !== Roles::Student->value) {
+        if (auth()->user()?->roles->pluck('name')[0] !== Roles::STUDENT->value) {
             return response()->json(['message' => 'Пользователь не может решить здание так как он не ученик'], 403);
         }
 
