@@ -1,15 +1,17 @@
 <?php
 
-namespace App\DTO\Api\Lesson\Request;
+namespace App\DTO\Api\Exercise\Request;
 
+use App\Models\Enums\ExerciseType;
 use Spatie\LaravelData\Data;
 use Spatie\LaravelData\Support\Validation\ValidationContext;
 
-class UpdateLessonDTO extends Data
+class UpdateExerciseDTO extends Data
 {
     public function __construct(
-        public string $name,
-        public string $theory,
+        public string $condition,
+        public ?string $type = ExerciseType::TEST->value,
+        public ?array $answers = [],
         public ?int $points = 1,
     ) {
     }
@@ -17,10 +19,10 @@ class UpdateLessonDTO extends Data
     public static function rules(ValidationContext $context): array
     {
         return [
-            'name'      => [
+            'type'      => [
                 'required',
             ],
-            'theory'      => [
+            'condition'      => [
                 'required',
             ],
         ];

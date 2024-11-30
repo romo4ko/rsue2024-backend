@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Services\Api;
 
+use App\DTO\Api\Exercise\Request\UpdateExerciseDTO;
 use App\DTO\Api\Lesson\Request\UpdateLessonDTO;
 use App\DTO\Api\Program\Request\ProgramSignUpDTO;
 use App\DTO\Api\Program\Request\ProgramStoreExerciseDTO;
@@ -12,6 +13,7 @@ use App\DTO\Api\Program\Response\ProgramShowDTO;
 use App\DTO\Api\Solution\Request\SolutionSolveDTO;
 use App\DTO\Api\Solution\Request\SolutionVerifyDTO;
 use App\DTO\Api\Solution\Response\SolutionIsSolvedDTO;
+use App\Models\Enums\ExerciseType;
 use App\Models\Enums\Roles;
 use App\Models\Exercise;
 use App\Models\Lesson;
@@ -86,11 +88,13 @@ class ProgramService
         return $lesson->toArray();
     }
 
-    public function updateLesson(Lesson $lesson, UpdateLessonDTO $updateLessonDTO): array|JsonResponse
+    public function updateLesson(Program $program, int $lessonId, UpdateLessonDTO $updateLessonDTO): array|JsonResponse
     {
         if (auth()->user()?->roles->pluck('name')[0] !== Roles::TEACHER->value) {
             return response()->json(['message' => 'Пользователь не может изменить урок так как он не учитель'], 403);
         }
+
+        $lesson = Lesson::query()->where('id', $lessonId)->where('program_id', $program?->id)->firstOrFail();
 
         $lesson->update(
             [
@@ -101,6 +105,27 @@ class ProgramService
         );
 
         return $lesson->toArray();
+    }
+
+    public function updateExercise(Program $program, int $lessonId, int $exerciseId, UpdateExerciseDTO $updateExerciseDTO): array|JsonResponse
+    {
+        if (auth()->user()?->roles->pluck('name')[0] !== Roles::TEACHER->value) {
+            return response()->json(['message' => 'Пользователь не может изменить задание так как он не учитель'], 403);
+        }
+
+        $lesson = Lesson::query()->where('id', $lessonId)->where('program_id', $program?->id)->first();
+        $exercise = Exercise::query()->where('id', $exerciseId)->where('lesson_id', $lesson?->id)->firstOrFail();
+
+        $exercise->update(
+            [
+                'type' => ExerciseType::tryFrom($updateExerciseDTO->type),
+                'condition' => $updateExerciseDTO->condition,
+                'answers' => $updateExerciseDTO->answers,
+                'points' => $updateExerciseDTO->points,
+            ]
+        );
+
+        return $exercise->toArray();
     }
 
     public function removeLesson(Program $program, int $lessonId):  JsonResponse|Response
