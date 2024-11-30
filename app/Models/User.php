@@ -7,6 +7,8 @@ namespace App\Models;
 use Filament\Models\Contracts\FilamentUser;
 use Filament\Panel;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
@@ -25,6 +27,7 @@ class User extends Authenticatable implements FilamentUser
         'patronymic',
         'email',
         'password',
+        'parent_id',
         'about',
         'image',
         'login',
@@ -57,8 +60,32 @@ class User extends Authenticatable implements FilamentUser
         ];
     }
 
+    protected $appends = [
+        'full_name',
+    ];
+
+    public function programs(): BelongsToMany
+    {
+        return $this->belongsToMany(Program::class);
+    }
+
+    public function lessons(): HasMany
+    {
+        return $this->hasMany(Lesson::class);
+    }
+
+    public function getFullNameAttribute(): string
+    {
+        return "{$this->surname} {$this->name} {$this->patronymic}";
+    }
+
     public function canAccessPanel(Panel $panel): bool
     {
         return (bool) $this->is_admin;
+    }
+
+    public function achievements(): BelongsToMany
+    {
+        return $this->belongsToMany(Achievement::class);
     }
 }

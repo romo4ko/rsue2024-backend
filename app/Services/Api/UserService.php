@@ -48,4 +48,16 @@ class UserService
 
         return response()->json(['message' => 'just meme'], 403);
     }
+
+    public function childrens(User $user): array
+    {
+        $childrens = User::with('roles')->where('parent_id', $user->id);
+
+        return $childrens->get()->toArray();
+    }
+
+    public function achievements(User $user): array
+    {
+        return $user->achievements()->get()->toArray();
+    }
 }

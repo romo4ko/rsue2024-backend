@@ -29,4 +29,25 @@ class UserController extends Controller
 
         return $this->userService->update($user, $userUpdateDTO);
     }
+
+    public function childrens(int $id): array
+    {
+        $user = User::query()->findOrFail($id);
+
+        return $this->userService->childrens($user);
+    }
+
+    public function achievements(int $id): array
+    {
+        $user = User::query()->findOrFail($id);
+
+        return $this->userService->achievements($user);
+    }
+
+    public function programs(int $id): array
+    {
+        $user = User::query()->findOrFail($id);
+
+        return $user?->programs->toArray();
+    }
 }

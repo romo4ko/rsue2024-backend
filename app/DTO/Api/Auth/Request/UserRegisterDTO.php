@@ -14,6 +14,7 @@ class UserRegisterDTO extends Data
         public string $name,
         public string $surname,
         public ?string $email,
+        public ?string $parentId,
         public string $password,
         public string $patronymic,
         public string $login,
@@ -54,7 +55,10 @@ class UserRegisterDTO extends Data
             'role' => [
                 'required',
                 Rule::exists('roles', 'name'),
-            ]
+            ],
+            'parentId' => [
+                Rule::exists('users', 'id'),
+            ],
         ];
     }
 }

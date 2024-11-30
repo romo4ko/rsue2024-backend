@@ -8,6 +8,7 @@ use App\DTO\Api\Auth\Request\UserAuthDTO;
 use App\DTO\Api\Auth\Request\UserRegisterDTO;
 use App\DTO\Api\Auth\Response\UserAuthShowDTO;
 use App\DTO\Api\Auth\Response\UserRegisterShowDTO;
+use App\Models\Enums\Roles;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Hash;
@@ -31,6 +32,11 @@ class AuthService
         $token = $user->createToken('token')->plainTextToken;
 
         $user->assignRole($userRegisterDTO->role);
+
+        if (Roles::Student->value === $userRegisterDTO->role) {
+            $user->parent_id = $userRegisterDTO->parentId;
+            $user->save();
+        }
 
         return UserRegisterShowDTO::from($user, $token)->toArray();
     }

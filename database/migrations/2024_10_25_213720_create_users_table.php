@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('email')->unique()->nullable();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
+            $table->integer('parent_id')->nullable();
             $table->text('about')->nullable();
             $table->string('image')->nullable();
             $table->boolean('is_admin')->default(false);
