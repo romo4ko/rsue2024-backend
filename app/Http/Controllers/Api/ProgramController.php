@@ -12,6 +12,7 @@ use App\DTO\Api\Solution\Request\SolutionVerifyDTO;
 use App\Models\Program;
 use App\Services\Api\ProgramService;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
 class ProgramController extends Controller
@@ -84,6 +85,13 @@ class ProgramController extends Controller
         $program = Program::query()->findOrFail($id);
 
         return $this->programService->solutionsVerify($program, $lessonId, $exerciseId, $solutionVerifyDTO);
+    }
+
+    public function getListSolutions(int $id, int $lessonId, int $exerciseId, Request $request): JsonResponse|Response|array
+    {
+        $program = Program::query()->findOrFail($id);
+
+        return $this->programService->getListSolutions($program, $lessonId, $exerciseId, $request);
     }
 
     public function isSolved(int $id, int $lessonId, int $exerciseId): array|JsonResponse
