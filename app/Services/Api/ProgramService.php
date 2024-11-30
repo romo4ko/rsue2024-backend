@@ -5,8 +5,10 @@ declare(strict_types=1);
 namespace App\Services\Api;
 
 use App\DTO\Api\Program\Request\ProgramSignUpDTO;
+use App\DTO\Api\Program\Request\ProgramStoreLessonDTO;
 use App\DTO\Api\Program\Response\ProgramShowDTO;
 use App\Models\Enums\Roles;
+use App\Models\Lesson;
 use App\Models\Program;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Collection;
@@ -34,6 +36,24 @@ class ProgramService
     public function show(Program $program): array
     {
         return ProgramShowDTO::from($program)->toArray();
+    }
+
+    public function storeLesson(Program $program, ProgramStoreLessonDTO $programStoreLessonDTO): array|JsonResponse
+    {
+
+        if (auth()->user()?->roles->pluck('name')[0] !== Roles::Teacher->value) {
+            return response()->json(['message' => 'Пользователь не может создать урок так как он не учитель'], 403);
+        }
+
+        $lesson = Lesson::query()->create(
+            [
+                'name' => $programStoreLessonDTO->name,
+                'theory' => $programStoreLessonDTO->theory,
+                'program_id' => $program->id,
+            ]
+        );
+
+        return $lesson->toArray();
     }
 
 
