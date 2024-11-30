@@ -10,7 +10,7 @@ class Achievement extends Model
     public $timestamps = true;
 
     protected $fillable = [
-        'img',
+        'image',
         'name',
     ];
 
