@@ -3,7 +3,6 @@
 namespace App\DTO\Api\Program\Response;
 
 use App\Models\Program;
-use Carbon\Carbon;
 use Spatie\LaravelData\Data;
 
 class ProgramShowDTO extends Data

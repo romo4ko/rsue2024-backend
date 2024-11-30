@@ -1,6 +1,6 @@
 <?php
 
-namespace App\DTO\Api\Mark\Response;
+namespace App\DTO\Api\Solution\Request;
 
 use App\Models\Lesson;
 use Illuminate\Support\Collection;

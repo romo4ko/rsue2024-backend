@@ -1,6 +1,6 @@
 <?php
 
-namespace App\DTO\Api\Mark\Response;
+namespace App\DTO\Api\Solution\Request;
 
 use App\DTO\Api\Program\Response\ProgramShowDTO;
 use App\Models\Program;

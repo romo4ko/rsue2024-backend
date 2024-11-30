@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Services\Api;
 
-use App\DTO\Api\Mark\Response\ProgramWithMarksShowDTO;
+use App\DTO\Api\Solution\Request\ProgramWithMarksShowDTO;
 use App\Models\Lesson;
 use App\Models\Program;
 use Illuminate\Support\Facades\DB;

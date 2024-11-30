@@ -1,6 +1,6 @@
 <?php
 
-namespace App\DTO\Api\Mark\Response;
+namespace App\DTO\Api\Solution\Request;
 
 use Spatie\LaravelData\Data;
 
