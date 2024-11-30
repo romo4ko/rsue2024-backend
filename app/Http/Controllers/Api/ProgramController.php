@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Api;
 
 use App\DTO\Api\Program\Request\ProgramSignUpDTO;
+use App\DTO\Api\Program\Request\ProgramStoreExerciseDTO;
 use App\DTO\Api\Program\Request\ProgramStoreLessonDTO;
 use App\Models\Program;
 use App\Services\Api\ProgramService;
@@ -39,6 +40,13 @@ class ProgramController extends Controller
         $lesson = $program?->lessons->where('id', $lessonId)->first();
 
         return $lesson ? $lesson->toArray() : [];
+    }
+
+    public function storeExercises(int $id, int $lessonId, ProgramStoreExerciseDTO $programStoreExerciseDTO): array|JsonResponse
+    {
+        $program = Program::query()->findOrFail($id);
+
+        return $this->programService->storeExercises($program, $lessonId, $programStoreExerciseDTO);
     }
 
     public function storeLesson(int $id, ProgramStoreLessonDTO $programStoreLessonDTO): array|JsonResponse
