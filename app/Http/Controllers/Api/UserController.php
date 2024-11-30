@@ -30,6 +30,13 @@ class UserController extends Controller
         return $this->userService->update($user, $userUpdateDTO);
     }
 
+    public function handleLesson(int $id, int $programId, int $lessonId): JsonResponse
+    {
+        $user = User::query()->findOrFail($id);
+
+        return $this->userService->handleLesson($user, $programId, $lessonId);
+    }
+
     public function childrens(int $id): array
     {
         $user = User::query()->findOrFail($id);

@@ -19,9 +19,6 @@ class UpdateExerciseDTO extends Data
     public static function rules(ValidationContext $context): array
     {
         return [
-            'type'      => [
-                'required',
-            ],
             'condition'      => [
                 'required',
             ],

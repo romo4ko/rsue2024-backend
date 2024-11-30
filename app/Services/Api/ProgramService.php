@@ -49,6 +49,19 @@ class ProgramService
         return ProgramShowDTO::from($program)->toArray();
     }
 
+    public function lesson(Lesson $lesson): array
+    {
+        $user = auth()->user();
+        if ($user?->roles->pluck('name')[0] === Roles::STUDENT->value) {
+            return $lesson->with(['exercises.solutions' => function($query) {
+                $query->where('solutions.student_id', auth()->id());
+            }])->get()->toArray();
+        }
+        else {
+            return $lesson->with('exercises')->get()->toArray();
+        }
+    }
+
     public function storeExercises(Program $program, int $lessonId, ProgramStoreExerciseDTO $programStoreExerciseDTO): array|JsonResponse
     {
         if (auth()->user()?->roles->pluck('name')[0] !== Roles::TEACHER->value) {

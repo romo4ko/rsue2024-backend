@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('type')->nullable();
             $table->binary('condition')->nullable();
             $table->json('answers')->nullable();
-            $table->integer('points')->nullable();
+            $table->integer('points')->default(1);
             $table->foreignId('lesson_id')->constrained('lessons')->cascadeOnDelete();
             $table->timestamps();
         });
