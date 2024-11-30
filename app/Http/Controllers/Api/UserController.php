@@ -43,4 +43,11 @@ class UserController extends Controller
 
         return $this->userService->achievements($user);
     }
+
+    public function programs(int $id): array
+    {
+        $user = User::query()->findOrFail($id);
+
+        return $user?->programs->toArray();
+    }
 }
