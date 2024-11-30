@@ -37,4 +37,9 @@ class Exercise extends Model
     {
         return $this->hasOne(Lesson::class);
     }
+
+    public function solutions(): HasMany
+    {
+        return $this->hasMany(Solution::class);
+    }
 }

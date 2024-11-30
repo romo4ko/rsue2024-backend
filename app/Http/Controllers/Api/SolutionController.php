@@ -8,6 +8,7 @@ use App\DTO\Api\Program\Request\ProgramSignUpDTO;
 use App\DTO\Api\Program\Request\ProgramStoreLessonDTO;
 use App\Models\Program;
 use App\Models\Solution;
+use App\Models\User;
 use App\Services\Api\ProgramService;
 use App\Services\Api\SolutionService;
 use Illuminate\Http\JsonResponse;
@@ -20,8 +21,10 @@ class SolutionController extends Controller
     ) {
     }
 
-    public function list(int $userId, int $programId): array
+    public function childrensMarks(int $userId): array|JsonResponse
     {
-        return $this->solutionService->list($userId, $programId);
+        $user = User::query()->findOrFail($userId);
+
+        return $this->solutionService->childrensMarks($user);
     }
 }
