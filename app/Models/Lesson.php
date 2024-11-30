@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
@@ -23,9 +24,9 @@ class Lesson extends Model
         return $this->hasMany(User::class, 'teacher_id');
     }
 
-    public function program(): HasOne
+    public function program(): BelongsTo
     {
-        return $this->hasOne(Program::class);
+        return $this->belongsTo(Program::class);
     }
 
     public function exercises(): HasMany

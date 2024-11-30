@@ -4,54 +4,38 @@ declare(strict_types=1);
 
 namespace App\Services\Api;
 
-use App\DTO\Api\Program\Request\ProgramSignUpDTO;
-use App\DTO\Api\Program\Request\ProgramStoreLessonDTO;
-use App\DTO\Api\Program\Response\ProgramShowDTO;
-use App\Models\Enums\Roles;
+use App\DTO\Api\Mark\Response\ProgramWithMarksShowDTO;
 use App\Models\Lesson;
 use App\Models\Program;
-use App\Models\User;
-use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Response;
+use Illuminate\Support\Facades\DB;
 
 class SolutionService
 {
-    public function storeLesson(Program $program, ProgramStoreLessonDTO $programStoreLessonDTO): array|JsonResponse
+    public function list(int $userId, int $programId): array
     {
+        $program = Program::query()->findOrFail($programId);
 
-        if (auth()->user()?->roles->pluck('name')[0] !== Roles::Teacher->value) {
-            return response()->json(['message' => 'Пользователь не может создать урок так как он не учитель'], 403);
-        }
+        $lessons = Lesson::query()
+            ->select(['lessons.id', 'lessons.name', 'lessons.points'])
+            ->join('exercises', 'lessons.id', 'exercises.lesson_id')
+            ->join('solutions', 'exercises.id', '=', 'solutions.exercise_id')
+            ->where('program_id', $programId)
+            ->where('solutions.student_id', $userId)
+            ->groupBy('lessons.id')
+            ->groupBy('lessons.name')
+            ->groupBy('lessons.points')
+            ->get();
 
-        $lesson = Lesson::query()->create(
-            [
-                'name' => $programStoreLessonDTO->name,
-                'theory' => $programStoreLessonDTO->theory,
-                'program_id' => $program->id,
-            ]
-        );
+        $exercises = DB::query()
+            ->select(['exercises.*', 'solutions.mark'])
+            ->from('solutions')
+            ->join('exercises', 'solutions.exercise_id', '=', 'exercises.id')
+            ->join('lessons', 'exercises.lesson_id', '=', 'lessons.id')
+            ->join('programs', 'lessons.program_id', '=', 'programs.id')
+            ->where('solutions.student_id', $userId)
+            ->where('programs.id', $programId)
+            ->get();
 
-        return $lesson->toArray();
-    }
-
-    public function removeLesson(Program $program, int $lessonId):  JsonResponse|Response
-    {
-        $lesson = Lesson::query()->where('id', $lessonId)->where('program_id', $program->id)->first();
-
-        if ($lesson) {
-            $lesson->delete();
-
-            return response()->noContent();
-        }
-
-        return response()->json(['message' => 'задание не найдено'], 404);
-    }
-
-    public function list(Collection $programs): array
-    {
-        return $programs->map(
-            fn(Program $program) => ProgramShowDTO::from($program)->toArray()
-        )->toArray();
+        return ProgramWithMarksShowDTO::fromModel($program, $lessons, $exercises)->toArray();
     }
 }

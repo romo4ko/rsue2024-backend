@@ -1,24 +1,27 @@
 <?php
 
-namespace App\DTO\Api\Program\Request;
+namespace App\DTO\Api\Solution\Request;
 
 use Spatie\LaravelData\Data;
 use Spatie\LaravelData\Support\Validation\ValidationContext;
 
-class ProgramStoreLessonDTO extends Data
+class SolutionVerifyDTO extends Data
 {
     public function __construct(
-        public string $name,
-        public ?string $theory
-    ) {
+        public int $mark,
+        public string $comment,
+    ){
     }
 
     public static function rules(ValidationContext $context): array
     {
         return [
-            'name'      => [
+            'comment'      => [
                 'required',
             ],
+            'mark' => [
+                'required',
+            ]
         ];
     }
 }

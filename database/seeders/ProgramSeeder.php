@@ -19,7 +19,7 @@ class ProgramSeeder extends Seeder
     public function run(): void
     {
         $program = Program::create([
-            'name' => fake()->name(),
+            'name' => fake()->word(),
             'description' => fake()->text(),
             'image' => '',
             'min_student_age' => 5,
@@ -28,7 +28,7 @@ class ProgramSeeder extends Seeder
 
         foreach (range(1, 5) as $index) {
             $lesson = Lesson::create([
-                'name' => fake()->name(),
+                'name' => fake()->word(),
                 'theory' => fake()->text(),
                 'program_id' => $program->id,
                 'points' => 10,

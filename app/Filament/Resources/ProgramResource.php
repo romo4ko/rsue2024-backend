@@ -26,7 +26,7 @@ class ProgramResource extends Resource
 
     protected static ?string $pluralModelLabel = 'Курсы';
 
-    protected static ?string $breadcrumb = 'Курс';
+    protected static ?string $breadcrumb = 'Курсы';
 
     protected static ?string $label = 'Курс';
 
@@ -78,6 +78,7 @@ class ProgramResource extends Resource
                     ->sortable(),
                 Tables\Columns\TextColumn::make('description')
                     ->label('Описание')
+                    ->limit(40)
                     ->searchable(),
                 Tables\Columns\ImageColumn::make('image')
                     ->label('Изображение'),

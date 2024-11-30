@@ -33,7 +33,7 @@ class AuthService
 
         $user->assignRole($userRegisterDTO->role);
 
-        if (Roles::Student->value === $userRegisterDTO->role) {
+        if (Roles::STUDENT->value === $userRegisterDTO->role) {
             $user->parent_id = $userRegisterDTO->parentId;
             $user->save();
         }

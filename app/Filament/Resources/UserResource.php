@@ -4,6 +4,7 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\UserResource\Pages;
 use App\Filament\Resources\UserResource\RelationManagers;
+use App\Models\Enums\Roles;
 use App\Models\User;
 use Filament\Forms;
 use Filament\Forms\Form;
@@ -32,23 +33,23 @@ class UserResource extends Resource
 
     protected static ?string $label = 'Пользователя';
 
-    public static function canCreate(): bool
-    {
-        return false;
-    }
-
     public static function form(Form $form): Form
     {
+        $record = $form->getRecord();
+        $role = $record?->getRoleNames()->first();
+
         return $form
             ->schema([
                 Forms\Components\TextInput::make('email')
-                    ->email()
-                    ->unique(),
+                    ->email(),
                 Forms\Components\TextInput::make('login')
-                    ->unique()
                     ->required(),
+                Forms\Components\Select::make('role')
+                    ->label('Роль')
+                    ->options(Roles::getTranslations())
+                    ->default($role),
                 Forms\Components\TextInput::make('password')
-                    ->hidden()
+                    ->hiddenOn('edit')
                     ->password()
                     ->dehydrateStateUsing(fn ($state) => Hash::make($state))
                     ->dehydrated(fn ($state) => filled($state))
@@ -56,7 +57,7 @@ class UserResource extends Resource
                 Forms\Components\Section::make()->schema([
                     Forms\Components\TextInput::make('name')->label('Имя')
                         ->required(),
-                    Forms\Components\TextInput::make('surname')->label('Фамилия'),
+                    Forms\Components\TextInput::make('surname')->label('Фамилия')->required(),
                     Forms\Components\TextInput::make('patronymic')->label('Отчество'),
                     Forms\Components\Textarea::make('about')->label('О себе')->rows(5),
                 ])->columns(),
@@ -72,6 +73,15 @@ class UserResource extends Resource
                     Forms\Components\Checkbox::make('is_confirmed')->label('Проверен'),
                     Forms\Components\Checkbox::make('is_admin')->label('Администратор'),
                 ])->columns(2),
+                $record->role === Roles::STUDENT->value ? Forms\Components\Section::make()->schema([
+                    Forms\Components\Select::make('achievements')
+                        ->label('Достижения пользователя')
+                        ->relationship('achievements', 'name')
+                        ->preload()
+                        ->multiple()
+                        ->columns(1),
+                ])
+                : Forms\Components\Section::make()->hidden(),
             ]);
     }
 
@@ -89,6 +99,11 @@ class UserResource extends Resource
                 Tables\Columns\TextColumn::make('email')
                     ->label('Почта')
                     ->searchable(),
+                Tables\Columns\TextColumn::make('role')
+                    ->label('Роль')
+                    ->getStateUsing(function (User $user) {
+                        return Roles::getTranslations()[$user->getRoleNames()->first()] ?? '-';
+                    }),
             ])
             ->defaultSort('created_at', 'desc')
             ->filters([

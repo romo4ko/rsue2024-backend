@@ -7,9 +7,12 @@ namespace App\Http\Controllers\Api;
 use App\DTO\Api\Program\Request\ProgramSignUpDTO;
 use App\DTO\Api\Program\Request\ProgramStoreExerciseDTO;
 use App\DTO\Api\Program\Request\ProgramStoreLessonDTO;
+use App\DTO\Api\Solution\Request\SolutionSolveDTO;
+use App\DTO\Api\Solution\Request\SolutionVerifyDTO;
 use App\Models\Program;
 use App\Services\Api\ProgramService;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
 class ProgramController extends Controller
@@ -68,6 +71,34 @@ class ProgramController extends Controller
         $program = Program::query()->findOrFail($id);
 
         return $this->programService->removeExercises($program, $lessonId, $exerciseId);
+    }
+
+    public function solutionsSolve(int $id, int $lessonId, int $exerciseId, SolutionSolveDTO $solutionSolveDTO): JsonResponse|Response|array
+    {
+        $program = Program::query()->findOrFail($id);
+
+        return $this->programService->solutionsSolve($program, $lessonId, $exerciseId, $solutionSolveDTO);
+    }
+
+    public function solutionsVerify(int $id, int $lessonId, int $exerciseId, SolutionVerifyDTO $solutionVerifyDTO): JsonResponse|Response|array
+    {
+        $program = Program::query()->findOrFail($id);
+
+        return $this->programService->solutionsVerify($program, $lessonId, $exerciseId, $solutionVerifyDTO);
+    }
+
+    public function getListSolutions(int $id, int $lessonId, int $exerciseId, Request $request): JsonResponse|Response|array
+    {
+        $program = Program::query()->findOrFail($id);
+
+        return $this->programService->getListSolutions($program, $lessonId, $exerciseId, $request);
+    }
+
+    public function isSolved(int $id, int $lessonId, int $exerciseId): array|JsonResponse
+    {
+        $program = Program::query()->findOrFail($id);
+
+        return $this->programService->isSolved($program, $lessonId, $exerciseId);
     }
 
     public function show(int $id): array

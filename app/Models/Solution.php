@@ -13,10 +13,15 @@ class Solution extends Model
     protected $fillable = [
         'answer',
         'mark',
+        'comment',
         'student_id',
         'teacher_id',
         'exercise_id',
         'verified_at',
+    ];
+
+    protected $casts = [
+        'answer' => 'array',
     ];
 
     public function teacher(): HasOne
@@ -32,5 +37,10 @@ class Solution extends Model
     public function exercise(): HasOne
     {
         return $this->hasOne(Exercise::class);
+    }
+
+    public function isSolved(): bool
+    {
+        return null !== $this->mark;
     }
 }

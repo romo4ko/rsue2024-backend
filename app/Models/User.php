@@ -62,6 +62,7 @@ class User extends Authenticatable implements FilamentUser
 
     protected $appends = [
         'full_name',
+        'role'
     ];
 
     public function programs(): BelongsToMany
@@ -87,5 +88,10 @@ class User extends Authenticatable implements FilamentUser
     public function achievements(): BelongsToMany
     {
         return $this->belongsToMany(Achievement::class);
+    }
+
+    public function getRoleAttribute(): ?string
+    {
+        return $this->getRoleNames()->first();
     }
 }
