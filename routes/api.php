@@ -21,6 +21,7 @@ Route::group(['middleware' => ['auth:sanctum']], static function () {
 
     Route::group(['prefix' => 'programs'], static function () {
         Route::get('/{id}', [ProgramController::class, 'show'])->name('programs.show');
+        Route::post('/{id}', [ProgramController::class, 'signUp'])->name('programs.signUp');
         Route::get('/', [ProgramController::class, 'list'])->name('programs.list');
     });
 });
