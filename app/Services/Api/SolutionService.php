@@ -4,19 +4,9 @@ declare(strict_types=1);
 
 namespace App\Services\Api;
 
-use App\DTO\Api\Program\Request\ProgramSignUpDTO;
-use App\DTO\Api\Program\Request\ProgramStoreLessonDTO;
-use App\DTO\Api\Program\Response\ProgramShowDTO;
-use App\DTO\Api\Solution\Response\ExerciseWithMarkShowDTO;
-use App\DTO\Api\Solution\Response\SolutionShowDTO;
-use App\Models\Enums\Roles;
+use App\DTO\Api\Mark\Response\ProgramWithMarksShowDTO;
 use App\Models\Lesson;
 use App\Models\Program;
-use App\Models\Solution;
-use App\Models\User;
-use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
 
 class SolutionService
@@ -25,8 +15,19 @@ class SolutionService
     {
         $program = Program::query()->findOrFail($programId);
 
-        $marks = DB::query()
-            ->select(['exercises.*', 'solutions.mark', 'solutions.answer'])
+        $lessons = Lesson::query()
+            ->select(['lessons.id', 'lessons.name', 'lessons.points'])
+            ->join('exercises', 'lessons.id', 'exercises.lesson_id')
+            ->join('solutions', 'exercises.id', '=', 'solutions.exercise_id')
+            ->where('program_id', $programId)
+            ->where('solutions.student_id', $userId)
+            ->groupBy('lessons.id')
+            ->groupBy('lessons.name')
+            ->groupBy('lessons.points')
+            ->get();
+
+        $exercises = DB::query()
+            ->select(['exercises.*', 'solutions.mark'])
             ->from('solutions')
             ->join('exercises', 'solutions.exercise_id', '=', 'exercises.id')
             ->join('lessons', 'exercises.lesson_id', '=', 'lessons.id')
@@ -35,7 +36,6 @@ class SolutionService
             ->where('programs.id', $programId)
             ->get();
 
-
-        return SolutionShowDTO::fromModel($program, $marks)->toArray();
+        return ProgramWithMarksShowDTO::fromModel($program, $lessons, $exercises)->toArray();
     }
 }
