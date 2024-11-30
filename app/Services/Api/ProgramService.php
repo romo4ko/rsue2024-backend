@@ -18,8 +18,8 @@ class ProgramService
     {
         $user = User::query()->find($programSignUpDTO->userId);
 
-        if (auth()->id() === $user->parent_id) {
-            if ($user->roles->pluck('name')[0] === Roles::Student->value) {
+        if (auth()->id() === $user?->parent_id) {
+            if ($user?->roles->pluck('name')[0] === Roles::Student->value) {
                 $program->users()->attach($user);
 
                 return ProgramShowDTO::from($program)->toArray();
