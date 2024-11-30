@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Services\Api;
 
+use App\DTO\Api\Lesson\Request\UpdateLessonDTO;
 use App\DTO\Api\Program\Request\ProgramSignUpDTO;
 use App\DTO\Api\Program\Request\ProgramStoreExerciseDTO;
 use App\DTO\Api\Program\Request\ProgramStoreLessonDTO;
@@ -79,6 +80,23 @@ class ProgramService
                 'name' => $programStoreLessonDTO->name,
                 'theory' => $programStoreLessonDTO->theory,
                 'program_id' => $program?->id,
+            ]
+        );
+
+        return $lesson->toArray();
+    }
+
+    public function updateLesson(Lesson $lesson, UpdateLessonDTO $updateLessonDTO): array|JsonResponse
+    {
+        if (auth()->user()?->roles->pluck('name')[0] !== Roles::TEACHER->value) {
+            return response()->json(['message' => 'Пользователь не может изменить урок так как он не учитель'], 403);
+        }
+
+        $lesson->update(
+            [
+                'name' => $updateLessonDTO->name,
+                'theory' => $updateLessonDTO->theory,
+                'points' => $updateLessonDTO->points,
             ]
         );
 
