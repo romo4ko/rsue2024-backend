@@ -2,6 +2,9 @@
 
 namespace App\Filament\Resources;
 
+use App\Filament\Resources\ExerciseResource\Pages\CreateExercise;
+use App\Filament\Resources\ExerciseResource\Pages\EditExercise;
+use App\Filament\Resources\ExerciseResource\Pages\ListExercises;
 use App\Filament\Resources\LessonResource\Pages;
 use App\Filament\Resources\LessonResource\RelationManagers;
 use App\Models\Lesson;
@@ -11,8 +14,9 @@ use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Filament\Tables\Actions\Action;
+use Illuminate\Contracts\Support\Htmlable;
+use Illuminate\Database\Eloquent\Model;
 
 class LessonResource extends Resource
 {
@@ -32,6 +36,11 @@ class LessonResource extends Resource
 
     protected static ?string $label = 'Урок';
 
+    public static function getRecordTitle(?Model $record): string|null|Htmlable
+    {
+        return $record->name;
+    }
+
     public static function form(Form $form): Form
     {
         return $form
@@ -44,14 +53,14 @@ class LessonResource extends Resource
                     ->relationship('program', 'name')
                     ->label('Программа')
                     ->required(),
+                Forms\Components\TextInput::make('points')
+                    ->label('Баллы за урок')
+                    ->numeric(),
                 Forms\Components\Section::make()->schema([
                     RichEditor::make('theory')
-                        ->label('Материал')
+                        ->label('Теоретический материал')
                         ->required(),
                 ])->columns(1),
-                Forms\Components\TextInput::make('points')
-                    ->label('Баллы')
-                    ->numeric(),
             ]);
     }
 
@@ -73,6 +82,14 @@ class LessonResource extends Resource
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
+                Action::make('Задания')
+                    ->color('success')
+                    ->icon('heroicon-o-puzzle-piece')
+                    ->url(
+                        fn (Lesson $record): string => static::getUrl('exercises.index', [
+                            'parent' => $record->id,
+                        ])
+                    ),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
@@ -94,6 +111,10 @@ class LessonResource extends Resource
             'index' => Pages\ListLessons::route('/'),
             'create' => Pages\CreateLesson::route('/create'),
             'edit' => Pages\EditLesson::route('/{record}/edit'),
+
+            'exercises.index' => ListExercises::route('/{parent}/exercises'),
+            'exercises.create' => CreateExercise::route('/{parent}/exercises/create'),
+            'exercises.edit' => EditExercise::route('/{parent}/exercises/{record}/edit'),
         ];
     }
 }

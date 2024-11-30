@@ -75,7 +75,7 @@ class UserResource extends Resource
                 ])->columns(2),
                 $record->role === Roles::STUDENT->value ? Forms\Components\Section::make()->schema([
                     Forms\Components\Select::make('achievements')
-                        ->label('Достижения пользователя')
+                        ->label('Достижения')
                         ->relationship('achievements', 'name')
                         ->preload()
                         ->multiple()
