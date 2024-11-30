@@ -13,6 +13,7 @@ use App\Models\Program;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Response;
 
 class ProgramService
 {
@@ -56,6 +57,18 @@ class ProgramService
         return $lesson->toArray();
     }
 
+    public function removeLesson(Program $program, int $lessonId):  JsonResponse|Response
+    {
+        $lesson = Lesson::query()->where('id', $lessonId)->where('program_id', $program->id)->first();
+
+        if ($lesson) {
+            $lesson->delete();
+
+            return response()->noContent();
+        }
+
+        return response()->json(['message' => 'задание не найдено'], 404);
+    }
 
     public function list(Collection $programs): array
     {

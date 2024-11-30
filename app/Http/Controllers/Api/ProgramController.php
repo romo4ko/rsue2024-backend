@@ -9,6 +9,7 @@ use App\DTO\Api\Program\Request\ProgramStoreLessonDTO;
 use App\Models\Program;
 use App\Services\Api\ProgramService;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Response;
 
 class ProgramController extends Controller
 {
@@ -45,6 +46,13 @@ class ProgramController extends Controller
         $program = Program::query()->findOrFail($id);
 
         return $this->programService->storeLesson($program, $programStoreLessonDTO);
+    }
+
+    public function removeLesson(int $id, int $lessonId): JsonResponse|Response
+    {
+        $program = Program::query()->findOrFail($id);
+
+        return $this->programService->removeLesson($program, $lessonId);
     }
 
     public function show(int $id): array
