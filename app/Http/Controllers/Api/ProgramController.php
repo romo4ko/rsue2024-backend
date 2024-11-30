@@ -59,7 +59,7 @@ class ProgramController extends Controller
     {
         $program = Program::query()->findOrFail($id);
 
-        return $this->programService->storeLesson($program);
+        return $this->programService->show($program);
     }
 
     public function list(): array

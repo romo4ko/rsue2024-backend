@@ -42,7 +42,10 @@ class UserResource extends Resource
         return $form
             ->schema([
                 Forms\Components\TextInput::make('email')
-                    ->disabled()
+                    ->email()
+                    ->unique(),
+                Forms\Components\TextInput::make('login')
+                    ->unique()
                     ->required(),
                 Forms\Components\TextInput::make('password')
                     ->hidden()
