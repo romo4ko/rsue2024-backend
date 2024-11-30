@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Api;
 
 use App\DTO\Api\Program\Request\ProgramSignUpDTO;
+use App\DTO\Api\Program\Request\ProgramStoreExerciseDTO;
 use App\DTO\Api\Program\Request\ProgramStoreLessonDTO;
 use App\Models\Program;
 use App\Services\Api\ProgramService;
@@ -41,6 +42,13 @@ class ProgramController extends Controller
         return $lesson ? $lesson->toArray() : [];
     }
 
+    public function storeExercises(int $id, int $lessonId, ProgramStoreExerciseDTO $programStoreExerciseDTO): array|JsonResponse
+    {
+        $program = Program::query()->findOrFail($id);
+
+        return $this->programService->storeExercises($program, $lessonId, $programStoreExerciseDTO);
+    }
+
     public function storeLesson(int $id, ProgramStoreLessonDTO $programStoreLessonDTO): array|JsonResponse
     {
         $program = Program::query()->findOrFail($id);
@@ -53,6 +61,13 @@ class ProgramController extends Controller
         $program = Program::query()->findOrFail($id);
 
         return $this->programService->removeLesson($program, $lessonId);
+    }
+
+    public function removeExercises(int $id, int $lessonId, int $exerciseId): JsonResponse|Response
+    {
+        $program = Program::query()->findOrFail($id);
+
+        return $this->programService->removeExercises($program, $lessonId, $exerciseId);
     }
 
     public function show(int $id): array

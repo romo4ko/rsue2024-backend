@@ -26,7 +26,7 @@ class ProgramShowDTO extends Data
             $program->id,
             $program->name,
             $program->description,
-            $program->image,
+            env('STORAGE_PATH') . $program->image,
             $program->min_student_age,
             $program->max_student_age,
             $program->created_at->toIso8601String(),
