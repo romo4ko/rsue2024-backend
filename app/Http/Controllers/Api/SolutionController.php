@@ -9,19 +9,19 @@ use App\DTO\Api\Program\Request\ProgramStoreLessonDTO;
 use App\Models\Program;
 use App\Models\Solution;
 use App\Services\Api\ProgramService;
+use App\Services\Api\SolutionService;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\DB;
 
 class SolutionController extends Controller
 {
     public function __construct(
-        protected ProgramService $programService
+        protected SolutionService $solutionService
     ) {
     }
 
-    public function list(): array
+    public function list(int $userId, int $programId): array
     {
-        $solutions = Solution::all();
-
-        return $this->programService->list($solutions);
+        return $this->solutionService->list($userId, $programId);
     }
 }

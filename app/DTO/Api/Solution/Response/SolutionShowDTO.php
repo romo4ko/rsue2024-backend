@@ -2,24 +2,26 @@
 
 namespace App\DTO\Api\Solution\Response;
 
+use App\DTO\Api\Program\Response\ProgramShowDTO;
 use App\Models\Program;
-use App\Models\Solution;
-use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Collection;
 use Spatie\LaravelData\Data;
 
 class SolutionShowDTO extends Data
 {
     public function __construct(
-        public Solution $solution,
-        public Collection $exercises
+        public ProgramShowDTO $program,
+        public Collection $exercises,
     ){
     }
 
-    public static function fromModel(Solution $solution, Collection $exercises): self
+    public static function fromModel(Program $program, Collection $exercises): self
     {
         return new self(
-            $solution,
-            $exercises
+            ProgramShowDTO::fromModel($program),
+            $exercises->map(
+                fn($mark) => ExerciseWithMarkShowDTO::fromModel($mark)
+            )
         );
     }
 }

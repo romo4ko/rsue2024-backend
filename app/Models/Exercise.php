@@ -19,6 +19,10 @@ class Exercise extends Model
         'lesson_id'
     ];
 
+    protected $casts = [
+        'answers' => 'array',
+    ];
+
     public function teachers(): HasMany
     {
         return $this->hasMany(User::class, 'teacher_id');

@@ -19,6 +19,10 @@ class Solution extends Model
         'verified_at',
     ];
 
+    protected $casts = [
+        'answer' => 'array',
+    ];
+
     public function teacher(): HasOne
     {
         return $this->hasOne(User::class);
