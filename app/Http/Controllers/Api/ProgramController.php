@@ -30,6 +30,15 @@ class ProgramController extends Controller
         return $program?->lessons->toArray();
     }
 
+    public function lesson(int $id, int $lessonId): array
+    {
+        $program = Program::with(['lessons.exercises'])->findOrFail($id);
+
+        $lesson = $program?->lessons->where('id', $lessonId)->first();
+
+        return $lesson ? $lesson->toArray() : [];
+    }
+
     public function show(int $id): array
     {
         $program = Program::query()->findOrFail($id);
