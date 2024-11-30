@@ -4,11 +4,14 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Api;
 
+use App\DTO\Api\Exercise\Request\UpdateExerciseDTO;
+use App\DTO\Api\Lesson\Request\UpdateLessonDTO;
 use App\DTO\Api\Program\Request\ProgramSignUpDTO;
 use App\DTO\Api\Program\Request\ProgramStoreExerciseDTO;
 use App\DTO\Api\Program\Request\ProgramStoreLessonDTO;
 use App\DTO\Api\Solution\Request\SolutionSolveDTO;
 use App\DTO\Api\Solution\Request\SolutionVerifyDTO;
+use App\Models\Lesson;
 use App\Models\Program;
 use App\Services\Api\ProgramService;
 use Illuminate\Http\JsonResponse;
@@ -52,6 +55,13 @@ class ProgramController extends Controller
         return $this->programService->storeExercises($program, $lessonId, $programStoreExerciseDTO);
     }
 
+    public function updateExercise(int $id, int $lessonId, int $exerciseId, UpdateExerciseDTO $updateExerciseDTO): array|JsonResponse
+    {
+        $program = Program::query()->findOrFail($id);
+
+        return $this->programService->updateExercise($program, $lessonId, $exerciseId, $updateExerciseDTO);
+    }
+
     public function storeLesson(int $id, ProgramStoreLessonDTO $programStoreLessonDTO): array|JsonResponse
     {
         $program = Program::query()->findOrFail($id);
@@ -64,6 +74,13 @@ class ProgramController extends Controller
         $program = Program::query()->findOrFail($id);
 
         return $this->programService->removeLesson($program, $lessonId);
+    }
+
+    public function updateLesson(int $id, int $lessonId, UpdateLessonDTO $updateLessonDTO): array|JsonResponse
+    {
+        $program = Program::query()->findOrFail($id);
+
+        return $this->programService->updateLesson($program, $lessonId, $updateLessonDTO);
     }
 
     public function removeExercises(int $id, int $lessonId, int $exerciseId): JsonResponse|Response
