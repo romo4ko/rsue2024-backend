@@ -63,6 +63,13 @@ class ProgramController extends Controller
         return $this->programService->removeLesson($program, $lessonId);
     }
 
+    public function removeExercises(int $id, int $lessonId, int $exerciseId): JsonResponse|Response
+    {
+        $program = Program::query()->findOrFail($id);
+
+        return $this->programService->removeExercises($program, $lessonId, $exerciseId);
+    }
+
     public function show(int $id): array
     {
         $program = Program::query()->findOrFail($id);

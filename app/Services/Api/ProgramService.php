@@ -65,7 +65,6 @@ class ProgramService
 
     public function storeLesson(Program $program, ProgramStoreLessonDTO $programStoreLessonDTO): array|JsonResponse
     {
-
         if (auth()->user()?->roles->pluck('name')[0] !== Roles::Teacher->value) {
             return response()->json(['message' => 'Пользователь не может создать урок так как он не учитель'], 403);
         }
@@ -83,10 +82,32 @@ class ProgramService
 
     public function removeLesson(Program $program, int $lessonId):  JsonResponse|Response
     {
+        if (auth()->user()?->roles->pluck('name')[0] !== Roles::Teacher->value) {
+            return response()->json(['message' => 'Пользователь не может удалить урок так как он не учитель'], 403);
+        }
+
         $lesson = Lesson::query()->where('id', $lessonId)->where('program_id', $program->id)->first();
 
         if ($lesson) {
             $lesson->delete();
+
+            return response()->noContent();
+        }
+
+        return response()->json(['message' => 'задание не найдено'], 404);
+    }
+
+    public function removeExercises(Program $program, int $lessonId, int $exerciseId): JsonResponse|Response
+    {
+        if (auth()->user()?->roles->pluck('name')[0] !== Roles::Teacher->value) {
+            return response()->json(['message' => 'Пользователь не может удалить задание так как он не учитель'], 403);
+        }
+
+        $lesson = Lesson::query()->where('id', $lessonId)->where('program_id', $program->id)->first();
+        $exercise = Exercise::query()->where('id', $exerciseId)->where('lesson_id', $lesson->id)->first();
+
+        if ($exercise) {
+            $exercise->delete();
 
             return response()->noContent();
         }

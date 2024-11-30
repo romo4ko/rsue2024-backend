@@ -23,6 +23,7 @@ Route::group(['middleware' => ['auth:sanctum']], static function () {
     Route::group(['prefix' => 'programs'], static function () {
         Route::get('/{id}/lessons/{lessonId}', [ProgramController::class, 'lesson'])->name('programs.lesson');
         Route::post('/{id}/lessons/{lessonId}/exercises', [ProgramController::class, 'storeExercises'])->name('programs.storeExercises');
+        Route::delete('/{id}/lessons/{lessonId}/exercises/{exerciseId}', [ProgramController::class, 'removeExercises'])->name('programs.removeExercises');
         Route::get('/{id}/lessons', [ProgramController::class, 'lessons'])->name('programs.lessons');
         Route::post('/{id}/lessons', [ProgramController::class, 'storeLesson'])->name('programs.storeLesson');
         Route::delete('/{id}/lessons/{lessonId}', [ProgramController::class, 'removeLesson'])->name('programs.removeLesson');
