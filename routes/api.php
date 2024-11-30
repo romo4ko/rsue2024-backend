@@ -21,7 +21,6 @@ Route::group(['middleware' => ['auth:sanctum']], static function () {
     });
 
     Route::group(['prefix' => 'programs'], static function () {
-        Route::get('/{id}', [ProgramController::class, 'show'])->name('programs.show');
         Route::get('/{id}/lessons/{lessonId}', [ProgramController::class, 'lesson'])->name('programs.lesson');
         Route::post('/{id}/lessons/{lessonId}/exercises', [ProgramController::class, 'storeExercises'])->name('programs.storeExercises');
         Route::get('/{id}/lessons', [ProgramController::class, 'lessons'])->name('programs.lessons');
@@ -29,6 +28,7 @@ Route::group(['middleware' => ['auth:sanctum']], static function () {
         Route::delete('/{id}/lessons/{lessonId}', [ProgramController::class, 'removeLesson'])->name('programs.removeLesson');
         Route::post('/{id}', [ProgramController::class, 'signUp'])->name('programs.signUp');
         Route::get('/', [ProgramController::class, 'list'])->name('programs.list');
+        Route::get('/{id}', [ProgramController::class, 'show'])->name('programs.show');
     });
 });
 
