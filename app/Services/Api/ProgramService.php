@@ -10,6 +10,7 @@ use App\DTO\Api\Program\Request\ProgramStoreLessonDTO;
 use App\DTO\Api\Program\Response\ProgramShowDTO;
 use App\DTO\Api\Solution\Request\SolutionSolveDTO;
 use App\DTO\Api\Solution\Request\SolutionVerifyDTO;
+use App\DTO\Api\Solution\Response\SolutionIsSolvedDTO;
 use App\Models\Enums\Roles;
 use App\Models\Exercise;
 use App\Models\Lesson;
@@ -165,6 +166,22 @@ class ProgramService
             return $solution->toArray();
         }
 
+        return response()->json(['message' => 'задание не найдено'], 404);
+    }
+
+    public function isSolved(Program $program, int $lessonId, int $exerciseId): array|JsonResponse
+    {
+        $lesson = Lesson::query()->where('id', $lessonId)->where('program_id', $program?->id)->first();
+        $exercise = Exercise::query()->where('id', $exerciseId)->where('lesson_id', $lesson?->id)->first();
+        $solution = Solution::query()
+            ->where('student_id', auth()->id())
+            ->where('teacher_id', $program->users()->first()->id)
+            ->where('exercise_id', $exercise?->id)
+            ->first();
+
+        if ($solution) {
+            return SolutionIsSolvedDTO::fromModel($solution)->toArray();
+        }
         return response()->json(['message' => 'задание не найдено'], 404);
     }
 

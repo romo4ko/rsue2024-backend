@@ -38,4 +38,9 @@ class Solution extends Model
     {
         return $this->hasOne(Exercise::class);
     }
+
+    public function isSolved(): bool
+    {
+        return null !== $this->mark;
+    }
 }
