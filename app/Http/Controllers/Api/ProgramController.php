@@ -41,11 +41,11 @@ class ProgramController extends Controller
 
     public function lesson(int $id, int $lessonId): array
     {
-        $program = Program::with(['lessons.exercises'])->findOrFail($id);
+        $program = Program::query()->findOrFail($id);
 
         $lesson = $program?->lessons->where('id', $lessonId)->first();
 
-        return $lesson ? $lesson->toArray() : [];
+        return $this->programService->lesson($lesson);
     }
 
     public function storeExercises(int $id, int $lessonId, ProgramStoreExerciseDTO $programStoreExerciseDTO): array|JsonResponse
