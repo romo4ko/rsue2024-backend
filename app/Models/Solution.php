@@ -13,6 +13,7 @@ class Solution extends Model
     protected $fillable = [
         'answer',
         'mark',
+        'comment',
         'student_id',
         'teacher_id',
         'exercise_id',

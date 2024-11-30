@@ -7,6 +7,7 @@ namespace App\Http\Controllers\Api;
 use App\DTO\Api\Program\Request\ProgramSignUpDTO;
 use App\DTO\Api\Program\Request\ProgramStoreExerciseDTO;
 use App\DTO\Api\Program\Request\ProgramStoreLessonDTO;
+use App\DTO\Api\Solution\Request\SolutionSolveDTO;
 use App\Models\Program;
 use App\Services\Api\ProgramService;
 use Illuminate\Http\JsonResponse;
@@ -68,6 +69,13 @@ class ProgramController extends Controller
         $program = Program::query()->findOrFail($id);
 
         return $this->programService->removeExercises($program, $lessonId, $exerciseId);
+    }
+
+    public function solutionsSolve(int $id, int $lessonId, int $exerciseId, SolutionSolveDTO $solutionSolveDTO): JsonResponse|Response|array
+    {
+        $program = Program::query()->findOrFail($id);
+
+        return $this->programService->solutionsSolve($program, $lessonId, $exerciseId, $solutionSolveDTO);
     }
 
     public function show(int $id): array
