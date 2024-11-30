@@ -51,6 +51,9 @@ class SolutionService
         $childrens = User::with(['programs.lessons.exercises.solutions' => function($query) {
             $query->whereNotNull('solutions.mark');
         }])
+            ->with(['programs.lessons' => function ($query) {
+                $query->has('exercises');
+            }])
             ->where('parent_id', $user->id)
             ->get();
 
