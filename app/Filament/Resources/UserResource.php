@@ -45,7 +45,6 @@ class UserResource extends Resource
                 Forms\Components\TextInput::make('login')
                     ->required(),
                 Forms\Components\Select::make('role')
-                    ->hidden()
                     ->label('Роль')
                     ->options(Roles::getTranslations())
                     ->default($role),
@@ -74,6 +73,15 @@ class UserResource extends Resource
                     Forms\Components\Checkbox::make('is_confirmed')->label('Проверен'),
                     Forms\Components\Checkbox::make('is_admin')->label('Администратор'),
                 ])->columns(2),
+                $record->role === Roles::STUDENT->value ? Forms\Components\Section::make()->schema([
+                    Forms\Components\Select::make('achievements')
+                        ->label('Достижения пользователя')
+                        ->relationship('achievements', 'name')
+                        ->preload()
+                        ->multiple()
+                        ->columns(1),
+                ])
+                : Forms\Components\Section::make()->hidden(),
             ]);
     }
 
@@ -93,9 +101,9 @@ class UserResource extends Resource
                     ->searchable(),
                 Tables\Columns\TextColumn::make('role')
                     ->label('Роль')
-                    ->default(fn(User $user): string =>
-                        Roles::getTranslations()[$user->getRoleNames()->first()] ?? '-'
-                    ),
+                    ->getStateUsing(function (User $user) {
+                        return Roles::getTranslations()[$user->getRoleNames()->first()] ?? '-';
+                    }),
             ])
             ->defaultSort('created_at', 'desc')
             ->filters([
