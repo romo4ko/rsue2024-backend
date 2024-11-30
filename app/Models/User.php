@@ -69,6 +69,11 @@ class User extends Authenticatable implements FilamentUser
         return $this->belongsToMany(Program::class);
     }
 
+    public function lessons(): HasMany
+    {
+        return $this->hasMany(Lesson::class);
+    }
+
     public function getFullNameAttribute(): string
     {
         return "{$this->surname} {$this->name} {$this->patronymic}";
