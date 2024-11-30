@@ -27,6 +27,7 @@ Route::group(['middleware' => ['auth:sanctum']], static function () {
         Route::post('/{id}/lessons/{lessonId}/exercises', [ProgramController::class, 'storeExercises'])->name('programs.storeExercises');
         Route::delete('/{id}/lessons/{lessonId}/exercises/{exerciseId}', [ProgramController::class, 'removeExercises'])->name('programs.removeExercises');
         Route::post('/{id}/lessons/{lessonId}/exercises/{exerciseId}/solutions/solve', [ProgramController::class, 'solutionsSolve'])->name('programs.solutionsSolve');
+        Route::post('/{id}/lessons/{lessonId}/exercises/{exerciseId}/solutions/verify', [ProgramController::class, 'solutionsVerify'])->name('programs.solutionsVerify');
         Route::get('/{id}/lessons', [ProgramController::class, 'lessons'])->name('programs.lessons');
         Route::post('/{id}/lessons', [ProgramController::class, 'storeLesson'])->name('programs.storeLesson');
         Route::delete('/{id}/lessons/{lessonId}', [ProgramController::class, 'removeLesson'])->name('programs.removeLesson');

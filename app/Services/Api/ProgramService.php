@@ -9,6 +9,7 @@ use App\DTO\Api\Program\Request\ProgramStoreExerciseDTO;
 use App\DTO\Api\Program\Request\ProgramStoreLessonDTO;
 use App\DTO\Api\Program\Response\ProgramShowDTO;
 use App\DTO\Api\Solution\Request\SolutionSolveDTO;
+use App\DTO\Api\Solution\Request\SolutionVerifyDTO;
 use App\Models\Enums\Roles;
 use App\Models\Exercise;
 use App\Models\Lesson;
@@ -49,14 +50,14 @@ class ProgramService
             return response()->json(['message' => 'Пользователь не может создать задание для урока так как он не учитель'], 403);
         }
 
-        $lesson = Lesson::query()->where('id', $lessonId)->where('program_id', $program->id)->first();
+        $lesson = Lesson::query()->where('id', $lessonId)->where('program_id', $program?->id)->first();
 
         if ($lesson) {
             $exercise = Exercise::query()->create([
                 'condition' => $programStoreExerciseDTO->condition,
                 'answers' => $programStoreExerciseDTO->answers,
                 'points' => $programStoreExerciseDTO->points,
-                'lesson_id' => $lesson->id,
+                'lesson_id' => $lesson?->id,
             ]);
 
             return $exercise->toArray();
@@ -75,7 +76,7 @@ class ProgramService
             [
                 'name' => $programStoreLessonDTO->name,
                 'theory' => $programStoreLessonDTO->theory,
-                'program_id' => $program->id,
+                'program_id' => $program?->id,
             ]
         );
 
@@ -88,7 +89,7 @@ class ProgramService
             return response()->json(['message' => 'Пользователь не может удалить урок так как он не учитель'], 403);
         }
 
-        $lesson = Lesson::query()->where('id', $lessonId)->where('program_id', $program->id)->first();
+        $lesson = Lesson::query()->where('id', $lessonId)->where('program_id', $program?->id)->first();
 
         if ($lesson) {
             $lesson->delete();
@@ -105,8 +106,8 @@ class ProgramService
             return response()->json(['message' => 'Пользователь не может удалить задание так как он не учитель'], 403);
         }
 
-        $lesson = Lesson::query()->where('id', $lessonId)->where('program_id', $program->id)->first();
-        $exercise = Exercise::query()->where('id', $exerciseId)->where('lesson_id', $lesson->id)->first();
+        $lesson = Lesson::query()->where('id', $lessonId)->where('program_id', $program?->id)->first();
+        $exercise = Exercise::query()->where('id', $exerciseId)->where('lesson_id', $lesson?->id)->first();
 
         if ($exercise) {
             $exercise->delete();
@@ -123,18 +124,45 @@ class ProgramService
             return response()->json(['message' => 'Пользователь не может решить здание так как он не ученик'], 403);
         }
 
-        $lesson = Lesson::query()->where('id', $lessonId)->where('program_id', $program->id)->first();
-        $exercise = Exercise::query()->where('id', $exerciseId)->where('lesson_id', $lesson->id)->first();
+        $lesson = Lesson::query()->where('id', $lessonId)->where('program_id', $program?->id)->first();
+        $exercise = Exercise::query()->where('id', $exerciseId)->where('lesson_id', $lesson?->id)->first();
 
         if ($exercise && $program->users()->exists()) {
             $solutionSolve = Solution::query()->create([
-                'comment' => $solutionSolveDTO->answer,
+                'answer' => $solutionSolveDTO->answer,
                 'student_id' => auth()->id(),
                 'teacher_id' => $program->users()->first()->id,
-                'exercise_id' => $exercise->id,
+                'exercise_id' => $exercise?->id,
             ]);
 
             return $solutionSolve->toArray();
+        }
+
+        return response()->json(['message' => 'задание не найдено'], 404);
+    }
+
+    public function solutionsVerify(Program $program, int $lessonId, int $exerciseId, SolutionVerifyDTO $solutionVerifyDTO): JsonResponse|Response|array
+    {
+        if (auth()->user()?->roles->pluck('name')[0] !== Roles::Teacher->value) {
+            return response()->json(['message' => 'Пользователь не может проверить задание так как он не учитель'], 403);
+        }
+
+        $lesson = Lesson::query()->where('id', $lessonId)->where('program_id', $program?->id)->first();
+        $exercise = Exercise::query()->where('id', $exerciseId)->where('lesson_id', $lesson?->id)->first();
+
+        $solution = Solution::query()
+            ->where('student_id', auth()->id())
+            ->where('teacher_id', $program->users()->first()->id)
+            ->where('exercise_id', $exercise?->id)
+            ->first();
+
+        if ($solution) {
+            $solution->comment = $solutionVerifyDTO->comment;
+            $solution->mark = $solutionVerifyDTO->mark;
+
+            $solution->save();
+
+            return $solution->toArray();
         }
 
         return response()->json(['message' => 'задание не найдено'], 404);
