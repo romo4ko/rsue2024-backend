@@ -26,7 +26,7 @@ class ProgramResource extends Resource
 
     protected static ?string $pluralModelLabel = 'Курсы';
 
-    protected static ?string $breadcrumb = 'Курс';
+    protected static ?string $breadcrumb = 'Курсы';
 
     protected static ?string $label = 'Курс';
 
