@@ -73,7 +73,34 @@ class ExerciseResource extends Resource
                                 ->label('Правильный ответ')
                                 ->default(false),
                         ])->columns(2)
-                : Forms\Components\Section::make()->hidden(),
+                : ($record->type === ExerciseType::PRACTICE->value ?
+                    Repeater::make('params')
+                        ->label('Параметры')
+                        ->schema([
+                            TextInput::make('name')
+                                ->label('Параметр')
+                                ->required(),
+                            TextInput::make('value')
+                                ->label('Значение')
+                                ->required(),
+                            Select::make('type')
+                                ->label('Тип')
+                                ->options([
+                                    'int' => 'Целое число',
+                                    'float' => 'Дробное число',
+                                    'string' => 'Строка',
+                                    'bool' => 'Логическое значение',
+                                ])
+                                ->required(),
+                            Select::make('std')
+                                ->label('std')
+                                ->options([
+                                    'input' => 'Входной',
+                                    'output' => 'Выходной',
+                                ])
+                                ->required(),
+                        ])->columns(4)
+                : Forms\Components\Section::make()->hidden()),
                 Forms\Components\TextInput::make('points')
                     ->label('Баллы за задание')
                     ->numeric()
