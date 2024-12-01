@@ -16,6 +16,8 @@ jobs:
           password: ${{ secrets.SERVER_PASSWORD }}
           script: |
             cd ${{ secrets.PROJECT_PATH }}
+            eval "$(ssh-agent -s)"
+            ssh-add /etc/ssh/github_ed25519
             git pull
             php composer install
             php artisan migrate --force
