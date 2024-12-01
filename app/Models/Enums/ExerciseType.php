@@ -6,4 +6,5 @@ enum ExerciseType: string
 {
     case TEST = 'test';
     case PRACTICE = 'practice';
+    case MANUAL = 'manual';
 }

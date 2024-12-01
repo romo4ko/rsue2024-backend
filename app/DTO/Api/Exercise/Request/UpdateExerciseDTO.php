@@ -10,7 +10,7 @@ class UpdateExerciseDTO extends Data
 {
     public function __construct(
         public string $condition,
-        public ?string $type = ExerciseType::TEST->value,
+        public ?string $type = ExerciseType::MANUAL->value,
         public ?array $answers = [],
         public ?int $points = 1,
     ) {
