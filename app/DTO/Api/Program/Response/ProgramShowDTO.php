@@ -18,7 +18,8 @@ class ProgramShowDTO extends Data
         public int $max_student_age,
         public string $created_at,
         public string $updated_at,
-        public ?Collection $teachers
+        public ?Collection $teachers,
+        public ?Collection $lessons
     ){
     }
 
@@ -34,8 +35,11 @@ class ProgramShowDTO extends Data
             $program->created_at->toIso8601String(),
             $program->updated_at->toIso8601String(),
             $program->users?->map(
-                fn($teacher) => UserShowDTO::fromModel($teacher)
-            )
+                fn($teacher) => $teacher->fullName
+            ),
+            $program->lessons?->map(
+                fn($lesson) => $lesson->name
+            ),
         );
     }
 }
