@@ -70,10 +70,6 @@ class UserResource extends Resource
                     ->label('Telegram ID')
                     ->disabled()
                     ->nullable(),
-                Forms\Components\Section::make()->schema([
-                    Forms\Components\Checkbox::make('is_confirmed')->label('Проверен'),
-                    Forms\Components\Checkbox::make('is_admin')->label('Администратор'),
-                ])->columns(2),
                 $record->role === Roles::STUDENT->value ? Forms\Components\Section::make()->schema([
                     Forms\Components\Select::make('achievements')
                         ->label('Достижения')

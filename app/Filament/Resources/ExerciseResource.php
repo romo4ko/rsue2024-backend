@@ -7,6 +7,9 @@ use App\Filament\Resources\ExerciseResource\RelationManagers;
 use App\Models\Enums\ExerciseType;
 use App\Models\Exercise;
 use Filament\Forms;
+use Filament\Forms\Components\Repeater;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
@@ -43,6 +46,8 @@ class ExerciseResource extends Resource
 
     public static function form(Form $form): Form
     {
+        $record = $form->getRecord();
+
         return $form
             ->schema([
                 Forms\Components\Select::make('type')
@@ -57,8 +62,45 @@ class ExerciseResource extends Resource
                     ->label('Условие')
                     ->required()
                     ->columns(1),
-                Forms\Components\Textarea::make('answers')
-                    ->label('Ответы'),
+                $record->type === ExerciseType::TEST->value ?
+                    Repeater::make('answers')
+                        ->label('Ответы')
+                        ->schema([
+                            TextInput::make('text')
+                                ->label('Ответ')
+                                ->required(),
+                            Forms\Components\Checkbox::make('isCorrect')
+                                ->label('Правильный ответ')
+                                ->default(false),
+                        ])->columns(2)
+                : ($record->type === ExerciseType::PRACTICE->value ?
+                    Repeater::make('params')
+                        ->label('Параметры')
+                        ->schema([
+                            TextInput::make('name')
+                                ->label('Параметр')
+                                ->required(),
+                            TextInput::make('value')
+                                ->label('Значение')
+                                ->required(),
+                            Select::make('type')
+                                ->label('Тип')
+                                ->options([
+                                    'int' => 'Целое число',
+                                    'float' => 'Дробное число',
+                                    'string' => 'Строка',
+                                    'bool' => 'Логическое значение',
+                                ])
+                                ->required(),
+                            Select::make('std')
+                                ->label('std')
+                                ->options([
+                                    'input' => 'Входной',
+                                    'output' => 'Выходной',
+                                ])
+                                ->required(),
+                        ])->columns(4)
+                : Forms\Components\Section::make()->hidden()),
                 Forms\Components\TextInput::make('points')
                     ->label('Баллы за задание')
                     ->numeric()
@@ -73,13 +115,18 @@ class ExerciseResource extends Resource
             ->columns([
                 Tables\Columns\TextColumn::make('id')
                     ->label('№'),
+                Tables\Columns\TextColumn::make('role')
+                    ->label('Тип задания')
+                    ->getStateUsing(function (Exercise $exercise) {
+                        return ExerciseType::getTranslations()[$exercise->type ?? ExerciseType::MANUAL] ?? '-';
+                    })
+                    ->sortable(),
                 Tables\Columns\TextColumn::make('condition')
                     ->label('Условие')
                     ->limit(50)
-                    ->searchable()
-                    ->sortable(),
+                    ->searchable(),
                 Tables\Columns\TextColumn::make('points')
-                    ->label('Баллы')
+                    ->label('Баллы за задание')
                     ->sortable(),
             ])
             ->filters([
