@@ -156,7 +156,7 @@ class ProgramService
 
         $exercise->update(
             [
-                'type' => $updateExerciseDTO->type ? ExerciseType::tryFrom($updateExerciseDTO->type) : ExerciseType::TEST->value,
+                'type' => $updateExerciseDTO->type ? ExerciseType::tryFrom($updateExerciseDTO->type) : ExerciseType::MANUAL->value,
                 'condition' => $updateExerciseDTO->condition,
                 'answers' => $updateExerciseDTO->answers,
                 'points' => $updateExerciseDTO->points,
@@ -258,7 +258,7 @@ class ProgramService
         return response()->json(['message' => 'задание не найдено'], 404);
     }
 
-    public function getListSolutions(Program $program, int $lessonId, int $exerciseId, Request $request): JsonResponse|Response|array
+    public function getListSolutions(Program $program, int $lessonId, int $exerciseId): JsonResponse|Response|array
     {
         $user = auth()->user();
         if ($user?->roles->pluck('name')[0] !== Roles::TEACHER->value) {
@@ -266,14 +266,17 @@ class ProgramService
         }
 
         $lesson = Lesson::query()->where('id', $lessonId)->where('program_id', $program?->id)->firstOrFail();
-        $exercise = Exercise::query()->where('id', $exerciseId)->where('lesson_id', $lesson?->id)->firstOrFail();
+        $exercise = Exercise::query()
+            ->with(['solutions' => function($query) {
+                $query->whereNotNull('answer')
+                    ->whereNull('mark');
+            }])
+            ->with('solutions.student')
+            ->where('id', $exerciseId)
+            ->where('lesson_id', $lesson?->id)
+            ->firstOrFail();
 
-        $solution = Solution::query()
-            ->where('exercise_id', $exercise?->id)
-            ->whereNotNull('answer')
-            ->whereNull('mark');
-
-        return $solution->get()->toArray();
+        return $exercise->toArray();
     }
 
     public function isSolved(Program $program, int $lessonId, int $exerciseId): array|JsonResponse

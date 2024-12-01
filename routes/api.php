@@ -50,6 +50,11 @@ Route::group(['middleware' => ['auth:sanctum']], static function () {
         Route::get('/', [AvatarController::class, 'list'])->name('avatars.list');
         Route::post('/buy/{id}', [AvatarController::class, 'buy'])->name('avatars.buy');
     });
+
+    Route::group(['prefix' => 'characters'], static function () {
+        Route::get('/', [AvatarController::class, 'list'])->name('characters.list');
+        Route::post('/buy/{id}', [AvatarController::class, 'buy'])->name('characters.buy');
+    });
 });
 
 Route::post('sync-telegram', [TelegramController::class, 'syncTelegram'])->name('auth.syncTelegram');

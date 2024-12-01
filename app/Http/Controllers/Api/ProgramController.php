@@ -107,11 +107,11 @@ class ProgramController extends Controller
         return $this->programService->solutionsVerify($program, $lessonId, $exerciseId, $solutionId, $solutionVerifyDTO);
     }
 
-    public function getListSolutions(int $id, int $lessonId, int $exerciseId, Request $request): JsonResponse|Response|array
+    public function getListSolutions(int $id, int $lessonId, int $exerciseId): JsonResponse|Response|array
     {
         $program = Program::query()->findOrFail($id);
 
-        return $this->programService->getListSolutions($program, $lessonId, $exerciseId, $request);
+        return $this->programService->getListSolutions($program, $lessonId, $exerciseId);
     }
 
     public function isSolved(int $id, int $lessonId, int $exerciseId): array|JsonResponse

@@ -20,7 +20,7 @@ class Character extends Model
 
     public function users(): BelongsToMany
     {
-        return $this->belongsToMany(User::class, 'student_avatar');
+        return $this->belongsToMany(User::class, 'student_character');
     }
 
     public function getUrlAttribute($value)
