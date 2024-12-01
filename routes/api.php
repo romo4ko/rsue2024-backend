@@ -33,7 +33,7 @@ Route::group(['middleware' => ['auth:sanctum']], static function () {
         Route::delete('/{id}/lessons/{lessonId}/exercises/{exerciseId}', [ProgramController::class, 'removeExercises'])->name('programs.removeExercises');
         Route::post('/{id}/lessons/{lessonId}/exercises/{exerciseId}', [ProgramController::class, 'updateExercise'])->name('programs.updateExercise');
         Route::post('/{id}/lessons/{lessonId}/exercises/{exerciseId}/solutions/solve', [ProgramController::class, 'solutionsSolve'])->name('programs.solutionsSolve');
-        Route::post('/{id}/lessons/{lessonId}/exercises/{exerciseId}/solutions/verify', [ProgramController::class, 'solutionsVerify'])->name('programs.solutionsVerify');
+        Route::post('/{id}/lessons/{lessonId}/exercises/{exerciseId}/solutions/{solutionId}/verify', [ProgramController::class, 'solutionsVerify'])->name('programs.solutionsVerify');
         Route::get('/{id}/lessons/{lessonId}/exercises/{exerciseId}/solutions', [ProgramController::class, 'getListSolutions'])->name('programs.getListSolutions');
         Route::get('/{id}/lessons/{lessonId}/exercises/{exerciseId}/isSolved', [ProgramController::class, 'isSolved'])->name('programs.isSolved');
         Route::get('/{id}/lessons', [ProgramController::class, 'lessons'])->name('programs.lessons');

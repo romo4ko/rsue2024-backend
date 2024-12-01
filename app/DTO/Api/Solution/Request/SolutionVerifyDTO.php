@@ -8,7 +8,6 @@ use Spatie\LaravelData\Support\Validation\ValidationContext;
 class SolutionVerifyDTO extends Data
 {
     public function __construct(
-        public int $studentId,
         public int $mark,
         public string $comment,
     ){
@@ -23,9 +22,6 @@ class SolutionVerifyDTO extends Data
             'mark' => [
                 'required',
             ],
-            'student_id' => [
-                'required',
-            ]
         ];
     }
 }
