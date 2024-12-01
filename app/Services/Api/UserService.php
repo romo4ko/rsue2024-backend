@@ -7,6 +7,8 @@ namespace App\Services\Api;
 use App\DTO\Api\User\Request\UserUpdateDTO;
 use App\DTO\Api\User\Response\AchievementShowDTO;
 use App\DTO\Api\User\Response\UserShowDTO;
+use App\Models\Avatar;
+use App\Models\Enums\Roles;
 use App\Models\Lesson;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
@@ -76,5 +78,23 @@ class UserService
         return $achievements->map(
             fn($achievement) => AchievementShowDTO::fromModel($achievement)
         )->toArray();
+    }
+
+    public function buyAvatar(Avatar $avatar): JsonResponse
+    {
+        $user = User::query()->findOrFail(auth()->user()->id);
+        if ($user?->roles->pluck('name')[0] !== Roles::STUDENT->value) {
+            throw new \Exception('Только ученики могут покупать аватары');
+        }
+        if ($user->balance < $avatar->price) {
+            throw new \Exception('Недостаточно средств для покупки аватара');
+        }
+
+        $user->balance -= $avatar->price;
+        $user->avatars()->attach($avatar);
+        $user->image = $avatar->image;
+        $user->save();
+
+        return new JsonResponse();
     }
 }
