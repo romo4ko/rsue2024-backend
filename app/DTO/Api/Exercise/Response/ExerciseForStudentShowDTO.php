@@ -31,12 +31,12 @@ class ExerciseForStudentShowDTO extends Data
             $exercise->type,
             $exercise->condition,
             $exercise->points,
-            $solution ? [
-                'answer' => $solution->answer,
-                'mark' => $solution->mark,
-                'comment' => $solution->comment,
-                'status' => $solution->status?->value,
-            ] : null
+            [
+                'answer' => $solution ? $solution->answer : null,
+                'mark' => $solution ? $solution->mark : null,
+                'comment' => $solution ? $solution->comment : null,
+                'status' => $solution ? $solution->status?->value : SolutionStatus::IN_PROCESS->value,
+            ]
         );
     }
 }
