@@ -137,7 +137,7 @@ class ProgramService
 
         $exercise->update(
             [
-                'type' => $updateExerciseDTO->type ? ExerciseType::tryFrom($updateExerciseDTO->type) : ExerciseType::TEST->value,
+                'type' => $updateExerciseDTO->type ? ExerciseType::tryFrom($updateExerciseDTO->type) : ExerciseType::MANUAL->value,
                 'condition' => $updateExerciseDTO->condition,
                 'answers' => $updateExerciseDTO->answers,
                 'points' => $updateExerciseDTO->points,

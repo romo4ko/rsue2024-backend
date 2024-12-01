@@ -36,7 +36,7 @@ class ProgramSeeder extends Seeder
 
             foreach (range(1, 5) as $index) {
                 Exercise::create([
-                    'type' => ExerciseType::TEST,
+                    'type' => ExerciseType::MANUAL,
                     'condition' => fake()->text(),
                     'answers' => [],
                     'points' => 5,

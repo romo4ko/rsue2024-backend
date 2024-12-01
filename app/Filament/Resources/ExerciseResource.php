@@ -50,6 +50,7 @@ class ExerciseResource extends Resource
                     ->options([
                         ExerciseType::TEST->value => 'Тест',
                         ExerciseType::PRACTICE->value => 'Практика',
+                        ExerciseType::MANUAL->value => 'Ручная проверка',
                     ])
                     ->maxWidth('xs'),
                 Forms\Components\RichEditor::make('condition')
