@@ -27,4 +27,11 @@ class SolutionController extends Controller
 
         return $this->solutionService->childrensMarks($user);
     }
+
+    public function studentsMarks(int $userId): array
+    {
+        $user = User::query()->findOrFail($userId);
+
+        return $this->solutionService->studentsMarks($user);
+    }
 }

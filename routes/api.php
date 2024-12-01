@@ -19,6 +19,7 @@ Route::group(['middleware' => ['auth:sanctum']], static function () {
         Route::get('/{id}/achievements', [UserController::class, 'achievements'])->name('users.achievements');
         Route::get('/{id}/programs', [UserController::class, 'programs'])->name('users.programs');
         Route::get('/{user_id}/childrens-marks', [SolutionController::class, 'childrensMarks'])->name('marks.childrensMarks');
+        Route::get('/{user_id}/students-marks', [SolutionController::class, 'studentsMarks'])->name('marks.studentsMarks');
         Route::get('/{id}', [UserController::class, 'show'])->name('users.show');
         Route::post('/{id}', [UserController::class, 'update'])->name('users.update');
         Route::post('/{id}/programs/{program_id}/lessons/{lesson_id}', [UserController::class, 'handleLesson'])->name('users.handleLesson');
