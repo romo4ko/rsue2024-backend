@@ -15,6 +15,7 @@ use App\DTO\Api\Solution\Request\LessonWithMarksShowDTO;
 use App\DTO\Api\Solution\Request\SolutionSolveDTO;
 use App\DTO\Api\Solution\Request\SolutionVerifyDTO;
 use App\DTO\Api\Solution\Response\SolutionIsSolvedDTO;
+use App\Http\Controllers\Api\TelegramController;
 use App\Models\Enums\ExerciseType;
 use App\Models\Enums\Roles;
 use App\Models\Exercise;
@@ -206,7 +207,7 @@ class ProgramService
 
     public function solutionsVerify(Program $program, int $lessonId, int $exerciseId, SolutionVerifyDTO $solutionVerifyDTO): JsonResponse|Response|array
     {
-        if (auth()->user()?->roles->pluck('name')[0] !== Roles::Teacher->value) {
+        if (auth()->user()?->roles->pluck('name')[0] !== Roles::TEACHER->value) {
             return response()->json(['message' => 'Пользователь не может проверить задание так как он не учитель'], 403);
         }
 
@@ -214,8 +215,8 @@ class ProgramService
         $exercise = Exercise::query()->where('id', $exerciseId)->where('lesson_id', $lesson?->id)->first();
 
         $solution = Solution::query()
-            ->where('student_id', auth()->id())
-            ->where('teacher_id', $program->users()->first()->id)
+            ->where('student_id', $solutionVerifyDTO->studentId)
+            ->where('teacher_id', auth()->id())
             ->where('exercise_id', $exercise?->id)
             ->first();
 
@@ -233,16 +234,15 @@ class ProgramService
 
     public function getListSolutions(Program $program, int $lessonId, int $exerciseId, Request $request): JsonResponse|Response|array
     {
-        $lesson = Lesson::query()->where('id', $lessonId)->where('program_id', $program?->id)->first();
-        $exercise = Exercise::query()->where('id', $exerciseId)->where('lesson_id', $lesson?->id)->first();
-
-        if (!$lesson && !$exercise) {
-            return response()->json(['message' => 'задание не найдено'], 404);
+        $user = auth()->user();
+        if ($user?->roles->pluck('name')[0] !== Roles::TEACHER->value) {
+            return response()->json(['message' => 'Пользователь не может проверить задание так как он не учитель'], 403);
         }
 
+        $lesson = Lesson::query()->where('id', $lessonId)->where('program_id', $program?->id)->firstOrFail();
+        $exercise = Exercise::query()->where('id', $exerciseId)->where('lesson_id', $lesson?->id)->firstOrFail();
+
         $solution = Solution::query()
-            ->where('student_id', auth()->id())
-            ->where('teacher_id', $program->users()->first()->id)
             ->where('exercise_id', $exercise?->id);
 
         if ($request->get('isVerified') === 'true') {
@@ -273,5 +273,15 @@ class ProgramService
     public function list(Collection $program): array
     {
         return ProgramShowDTO::collect($program)->toArray();
+    }
+
+    public function getExercises(Program $program, int $lessonId): array
+    {
+        return Lesson::query()
+            ->with('exercises')
+            ->where('id', $lessonId)
+            ->where('program_id', $program?->id)
+            ->firstOrFail()
+            ->toArray();
     }
 }

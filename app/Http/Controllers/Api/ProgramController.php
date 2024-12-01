@@ -136,4 +136,11 @@ class ProgramController extends Controller
 
         return $this->programService->list($programs);
     }
+
+    public function getExercises(int $id, int $lessonId): array
+    {
+        $program = Program::query()->findOrFail($id);
+
+        return $this->programService->getExercises($program, $lessonId);
+    }
 }

@@ -7,6 +7,7 @@ namespace App\Http\Controllers\Api;
 use App\DTO\Api\User\Request\UserUpdateDTO;
 use App\Models\User;
 use App\Services\Api\UserService;
+use http\Env\Request;
 use Illuminate\Http\JsonResponse;
 
 class UserController extends Controller
@@ -55,6 +56,11 @@ class UserController extends Controller
     {
         $user = User::query()->findOrFail($id);
 
-        return $user?->programs->toArray();
+        return $user?->programs()->with('lessons')->get()->toArray();
+    }
+
+    public function storeTelegram(\Illuminate\Http\Request $request): JsonResponse
+    {
+        return $this->userService->storeTelegram($request->get('username'));
     }
 }
