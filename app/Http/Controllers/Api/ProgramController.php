@@ -30,6 +30,11 @@ class ProgramController extends Controller
         return $this->programService->signUp($program);
     }
 
+    public function myPrograms(): array
+    {
+        return $this->programService->myPrograms();
+    }
+
     public function lessons(int $id): array
     {
         $program = Program::query()->findOrFail($id);

@@ -11,6 +11,7 @@ use App\DTO\Api\Program\Request\ProgramSignUpDTO;
 use App\DTO\Api\Program\Request\ProgramStoreExerciseDTO;
 use App\DTO\Api\Program\Request\ProgramStoreLessonDTO;
 use App\DTO\Api\Program\Response\ProgramShowDTO;
+use App\DTO\Api\Program\Response\ProgramShowMyProgramDTO;
 use App\DTO\Api\Solution\Request\LessonWithMarksShowDTO;
 use App\DTO\Api\Solution\Request\SolutionSolveDTO;
 use App\DTO\Api\Solution\Request\SolutionVerifyDTO;
@@ -46,6 +47,24 @@ class ProgramService
         }
 
         return response()->json(['message' => 'Пользователь не может быть записан на курс так как он не студент'], 403);
+    }
+
+    public function myPrograms(): array
+    {
+        $user = auth()->user();
+
+        if ($user?->roles->pluck('name')[0] === Roles::STUDENT->value) {
+            $programs = Program::query()
+                ->with('users')
+                ->whereHas('users', function ($query) use ($user) {
+                    $query->where('user_id', $user->id);
+                })
+                ->get();
+
+            return ProgramShowMyProgramDTO::collect($programs)->toArray();
+        }
+
+        return [];
     }
 
     public function show(Program $program): array
@@ -276,6 +295,7 @@ class ProgramService
     public function list(): array
     {
         $user = auth()->user();
+
         if ($user?->roles->pluck('name')[0] === Roles::STUDENT->value) {
             $program = Program::query()
                 ->with('users')
