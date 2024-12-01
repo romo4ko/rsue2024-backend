@@ -6,10 +6,12 @@ namespace App\Services\Api;
 
 use App\DTO\Api\Exercise\Request\UpdateExerciseDTO;
 use App\DTO\Api\Lesson\Request\UpdateLessonDTO;
+use App\DTO\Api\Lesson\Response\LessonForStudentShowDTO;
 use App\DTO\Api\Program\Request\ProgramSignUpDTO;
 use App\DTO\Api\Program\Request\ProgramStoreExerciseDTO;
 use App\DTO\Api\Program\Request\ProgramStoreLessonDTO;
 use App\DTO\Api\Program\Response\ProgramShowDTO;
+use App\DTO\Api\Solution\Request\LessonWithMarksShowDTO;
 use App\DTO\Api\Solution\Request\SolutionSolveDTO;
 use App\DTO\Api\Solution\Request\SolutionVerifyDTO;
 use App\DTO\Api\Solution\Response\SolutionIsSolvedDTO;
@@ -53,9 +55,11 @@ class ProgramService
     {
         $user = auth()->user();
         if ($user?->roles->pluck('name')[0] === Roles::STUDENT->value) {
-            return Lesson::query()->where('id', $lesson->id)->with(['exercises.solutions' => function($query) {
+            $lesson = Lesson::query()->where('id', $lesson->id)->with(['exercises.solutions' => function($query) {
                 $query->where('solutions.student_id', auth()->id());
-            }])->first()->toArray();
+            }])->first();
+
+            return LessonForStudentShowDTO::fromModel($lesson)->toArray();
         }
         else {
             return Lesson::query()->where('id', $lesson->id)->with('exercises')->first()->toArray();
