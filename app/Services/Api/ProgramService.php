@@ -29,21 +29,22 @@ use Illuminate\Http\Response;
 
 class ProgramService
 {
-    public function signUp(Program $program, ProgramSignUpDTO $programSignUpDTO): array|JsonResponse
+    public function signUp(Program $program): array|JsonResponse
     {
-        $user = User::query()->find($programSignUpDTO->userId);
+        $student = auth()->user();
 
-        if (auth()->id() === $user?->parent_id) {
-            if ($user?->roles->pluck('name')[0] === Roles::STUDENT->value) {
-                $program->users()->attach($user);
+        if ($student?->roles->pluck('name')[0] === Roles::STUDENT->value) {
+
+            if ($student?->programs()->where('program_id', $program->id)->get()->count() === 0) {
+                $program->users()->attach($student);
 
                 return ProgramShowDTO::from($program)->toArray();
             }
 
-            return response()->json(['message' => 'Пользователь не может быть записан на курс так как он не студент'], 403);
+            return response()->json(['message' => 'Ученик уже состит на данном курсе'], 403);
         }
 
-        return response()->json(['message' => 'Вы не являетесь родителм данного ребенка'], 403);
+        return response()->json(['message' => 'Пользователь не может быть записан на курс так как он не студент'], 403);
     }
 
     public function show(Program $program): array
@@ -269,10 +270,8 @@ class ProgramService
         return response()->json(['message' => 'задание не найдено'], 404);
     }
 
-    public function list(Collection $programs): array
+    public function list(Collection $program): array
     {
-        return $programs->map(
-            fn(Program $program) => ProgramShowDTO::from($program)->toArray()
-        )->toArray();
+        return ProgramShowDTO::collect($program)->toArray();
     }
 }

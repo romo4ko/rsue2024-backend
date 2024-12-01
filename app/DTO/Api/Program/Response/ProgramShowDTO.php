@@ -23,7 +23,7 @@ class ProgramShowDTO extends Data
     ){
     }
 
-    public static function fromModel(Program $program): self
+    public static function fromModel(\Illuminate\Database\Eloquent\Collection $program): self
     {
         return new self(
             $program->id,

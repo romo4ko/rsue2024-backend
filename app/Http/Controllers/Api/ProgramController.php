@@ -25,11 +25,11 @@ class ProgramController extends Controller
     ) {
     }
 
-    public function signUp(int $id, ProgramSignUpDTO $programSignUpDTO): array|JsonResponse
+    public function signUp(int $id): array|JsonResponse
     {
         $program = Program::query()->findOrFail($id);
 
-        return $this->programService->signUp($program, $programSignUpDTO);
+        return $this->programService->signUp($program);
     }
 
     public function lessons(int $id): array
@@ -127,7 +127,12 @@ class ProgramController extends Controller
 
     public function list(): array
     {
-        $programs = Program::all();
+        $programs = Program::query()
+            ->with('users')
+            ->whereDoesntHave('users', function ($query) {
+                $query->where('user_id', auth()->id());
+            })
+            ->get();
 
         return $this->programService->list($programs);
     }
