@@ -1,4 +1,3 @@
-import defaultTheme from 'tailwindcss/defaultTheme';
 
 /** @type {import('tailwindcss').Config} */
 export default {
@@ -11,8 +10,14 @@ export default {
     ],
     theme: {
         extend: {
-            fontFamily: {
-                sans: ['Figtree', ...defaultTheme.fontFamily.sans],
+            colors: {
+                'title-color': '#293b29',
+                'icons': '#f4fbf4',
+                'subtitle': '#738373',
+                'hover-title': '#248124'
+            },
+            boxShadow: {
+                'card': '0 2px 15px 0 rgba(208, 217, 208, 0.5)',
             },
         },
     },
