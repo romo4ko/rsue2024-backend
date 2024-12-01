@@ -299,6 +299,8 @@ class ProgramService
     {
         $user = auth()->user();
 
+        $program = Program::all();
+
         if ($user?->roles->pluck('name')[0] === Roles::STUDENT->value) {
             $program = Program::query()
                 ->with('users')
