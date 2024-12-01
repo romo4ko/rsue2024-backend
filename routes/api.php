@@ -44,6 +44,7 @@ Route::group(['middleware' => ['auth:sanctum']], static function () {
 
     Route::group(['prefix' => 'avatars'], static function () {
         Route::get('/', [AvatarController::class, 'list'])->name('avatars.list');
+        Route::post('/buy/{id}', [AvatarController::class, 'buy'])->name('avatars.buy');
     });
 });
 

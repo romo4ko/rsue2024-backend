@@ -91,7 +91,7 @@ class UserService
         }
 
         $user->balance -= $avatar->price;
-        $user->avatars->attach($avatar);
+        $user->avatars()->attach($avatar);
         $user->image = $avatar->image;
         $user->save();
 
