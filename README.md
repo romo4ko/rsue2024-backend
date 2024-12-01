@@ -53,3 +53,5 @@ make shell
 ```
 
 В консоли продолжить обычную установку с шага composer install
+
+qweq
