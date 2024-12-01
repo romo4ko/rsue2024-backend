@@ -222,11 +222,16 @@ class ProgramService
 
         if ($solution) {
             $solution->comment = $solutionVerifyDTO->comment;
-            $solution->mark = $solutionVerifyDTO->mark;
+            if ($solutionVerifyDTO->mark !== null) {
+                $solution->mark = $solutionVerifyDTO->mark;
+            }
             $solution->teacher_id = $user->id;
             $solution->verified_at = now();
 
             $solution->save();
+
+            $telegramController = new TelegramController();
+            $telegramController->solutionVerified($solution);
 
             return $solution->toArray();
         }
