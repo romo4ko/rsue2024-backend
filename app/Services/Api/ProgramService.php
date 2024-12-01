@@ -275,4 +275,14 @@ class ProgramService
             fn(Program $program) => ProgramShowDTO::from($program)->toArray()
         )->toArray();
     }
+
+    public function getExercises(Program $program, int $lessonId): array
+    {
+        return Lesson::query()
+            ->with('exercises')
+            ->where('id', $lessonId)
+            ->where('program_id', $program?->id)
+            ->firstOrFail()
+            ->toArray();
+    }
 }
