@@ -29,7 +29,7 @@ class CharacterResource extends Resource
 
     protected static ?string $breadcrumb = 'Персонажи';
 
-    protected static ?string $label = 'Персонаж';
+    protected static ?string $label = 'Персонажа';
 
     public static function form(Form $form): Form
     {
