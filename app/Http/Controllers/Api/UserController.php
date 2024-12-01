@@ -56,7 +56,7 @@ class UserController extends Controller
     {
         $user = User::query()->findOrFail($id);
 
-        return $user?->programs->toArray();
+        return $user?->programs->with('lessons')->toArray();
     }
 
     public function storeTelegram(\Illuminate\Http\Request $request): JsonResponse
