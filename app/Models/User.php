@@ -100,4 +100,9 @@ class User extends Authenticatable implements FilamentUser
     {
         return $this->belongsToMany(Avatar::class, 'student_avatar');
     }
+
+    public function getAvatarAttribute(): ?string
+    {
+        return $this->image !== null ? env('STORAGE_PATH') . $this->image : null;
+    }
 }
