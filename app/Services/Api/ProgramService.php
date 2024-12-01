@@ -53,12 +53,12 @@ class ProgramService
     {
         $user = auth()->user();
         if ($user?->roles->pluck('name')[0] === Roles::STUDENT->value) {
-            return $lesson->with(['exercises.solutions' => function($query) {
+            return Lesson::query()->where('id', $lesson->id)->with(['exercises.solutions' => function($query) {
                 $query->where('solutions.student_id', auth()->id());
-            }])->get()->toArray();
+            }])->first()->toArray();
         }
         else {
-            return $lesson->with('exercises')->get()->toArray();
+            return Lesson::query()->where('id', $lesson->id)->with('exercises')->first()->toArray();
         }
     }
 

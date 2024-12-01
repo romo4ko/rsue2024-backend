@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\AvatarController;
 use App\Http\Controllers\Api\ProgramController;
 use App\Http\Controllers\Api\SolutionController;
 use App\Http\Controllers\Api\TelegramController;
@@ -39,6 +40,10 @@ Route::group(['middleware' => ['auth:sanctum']], static function () {
         Route::post('/{id}', [ProgramController::class, 'signUp'])->name('programs.signUp');
         Route::get('/', [ProgramController::class, 'list'])->name('programs.list');
         Route::get('/{id}', [ProgramController::class, 'show'])->name('programs.show');
+    });
+
+    Route::group(['prefix' => 'avatars'], static function () {
+        Route::get('/', [AvatarController::class, 'list'])->name('avatars.list');
     });
 });
 

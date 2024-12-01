@@ -95,4 +95,9 @@ class User extends Authenticatable implements FilamentUser
     {
         return $this->getRoleNames()->first();
     }
+
+    public function avatars(): BelongsToMany
+    {
+        return $this->belongsToMany(Avatar::class, 'student_avatar');
+    }
 }
