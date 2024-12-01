@@ -97,4 +97,13 @@ class UserService
 
         return new JsonResponse();
     }
+
+    public function storeTelegram($username): JsonResponse
+    {
+        $user = User::query()->findOrFail(auth()->user()->id);
+        $user->telegram_username = $username;
+        $user->save();
+
+        return new JsonResponse();
+    }
 }
