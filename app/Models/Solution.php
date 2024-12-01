@@ -31,12 +31,12 @@ class Solution extends Model
 
     public function teacher(): HasOne
     {
-        return $this->hasOne(User::class);
+        return $this->hasOne(User::class, 'id', 'teacher_id');
     }
 
     public function student(): HasOne
     {
-        return $this->hasOne(User::class);
+        return $this->hasOne(User::class, 'id', 'student_id');
     }
 
     public function exercise(): HasOne

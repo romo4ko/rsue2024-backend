@@ -8,6 +8,7 @@ use Filament\Models\Contracts\FilamentUser;
 use Filament\Panel;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
@@ -104,5 +105,10 @@ class User extends Authenticatable implements FilamentUser
     public function getAvatarAttribute(): ?string
     {
         return $this->image !== null ? env('STORAGE_PATH') . $this->image : null;
+    }
+
+    public function parentUser(): HasOne
+    {
+        return $this->hasOne(User::class, 'id', 'parent_id');
     }
 }

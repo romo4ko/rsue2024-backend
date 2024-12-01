@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Models\Solution;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -61,5 +62,24 @@ class TelegramController
             )
         );
         curl_exec($ch);
+    }
+
+    public function solutionVerified(Solution $solution)
+    {
+        $parent = $solution->student->parentUser;
+        if ($parent?->telegram_id !== null) {
+
+            if ($solution->mark === null) {
+                $this->sendMessage(
+                    $parent->telegram_id,
+                    "Преподаватель оставил комментарий к заданию {$solution->exercise_id} вашего ребенка: {$solution->comment}"
+                );
+                return;
+            }
+            $this->sendMessage(
+                $parent->telegram_id,
+                "Ваш ребенок получил оценку {$solution->mark} за задание {$solution->exercise_id}"
+            );
+        }
     }
 }

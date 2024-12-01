@@ -63,6 +63,7 @@ class UserResource extends Resource
                 ])->columns(),
                 Forms\Components\TextInput::make('telegram_username')
                     ->label('Telegram username')
+                    ->disabled()
                     ->unique()
                     ->nullable(),
                 Forms\Components\TextInput::make('telegram_id')
@@ -98,6 +99,10 @@ class UserResource extends Resource
                     ->searchable(),
                 Tables\Columns\TextColumn::make('email')
                     ->label('Почта')
+                    ->default('-')
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('login')
+                    ->label('Логин')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('role')
                     ->label('Роль')
