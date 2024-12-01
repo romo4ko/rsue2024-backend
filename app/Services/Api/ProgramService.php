@@ -204,24 +204,26 @@ class ProgramService
         return response()->json(['message' => 'задание не найдено'], 404);
     }
 
-    public function solutionsVerify(Program $program, int $lessonId, int $exerciseId, SolutionVerifyDTO $solutionVerifyDTO): JsonResponse|Response|array
+    public function solutionsVerify(Program $program, int $lessonId, int $exerciseId, $solutionId, SolutionVerifyDTO $solutionVerifyDTO): JsonResponse|Response|array
     {
-        if (auth()->user()?->roles->pluck('name')[0] !== Roles::TEACHER->value) {
+        $user = auth()->user();
+        if ($user?->roles->pluck('name')[0] !== Roles::TEACHER->value) {
             return response()->json(['message' => 'Пользователь не может проверить задание так как он не учитель'], 403);
         }
 
-        $lesson = Lesson::query()->where('id', $lessonId)->where('program_id', $program?->id)->first();
-        $exercise = Exercise::query()->where('id', $exerciseId)->where('lesson_id', $lesson?->id)->first();
+        $lesson = Lesson::query()->where('id', $lessonId)->where('program_id', $program?->id)->firstOrFail();
+        $exercise = Exercise::query()->where('id', $exerciseId)->where('lesson_id', $lesson?->id)->firstOrFail();
 
         $solution = Solution::query()
-            ->where('student_id', $solutionVerifyDTO->studentId)
-            ->where('teacher_id', auth()->id())
             ->where('exercise_id', $exercise?->id)
+            ->where('id', $solutionId)
             ->first();
 
         if ($solution) {
             $solution->comment = $solutionVerifyDTO->comment;
             $solution->mark = $solutionVerifyDTO->mark;
+            $solution->teacher_id = $user->id;
+            $solution->verified_at = now();
 
             $solution->save();
 
@@ -242,13 +244,9 @@ class ProgramService
         $exercise = Exercise::query()->where('id', $exerciseId)->where('lesson_id', $lesson?->id)->firstOrFail();
 
         $solution = Solution::query()
-            ->where('exercise_id', $exercise?->id);
-
-        if ($request->get('isVerified') === 'true') {
-            $solution->whereNotNull('mark');
-        } else if ($request->get('isVerified') === 'false') {
-            $solution->whereNull('mark');
-        }
+            ->where('exercise_id', $exercise?->id)
+            ->whereNotNull('answer')
+            ->whereNull('mark');
 
         return $solution->get()->toArray();
     }
