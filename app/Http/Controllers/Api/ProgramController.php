@@ -6,12 +6,10 @@ namespace App\Http\Controllers\Api;
 
 use App\DTO\Api\Exercise\Request\UpdateExerciseDTO;
 use App\DTO\Api\Lesson\Request\UpdateLessonDTO;
-use App\DTO\Api\Program\Request\ProgramSignUpDTO;
 use App\DTO\Api\Program\Request\ProgramStoreExerciseDTO;
 use App\DTO\Api\Program\Request\ProgramStoreLessonDTO;
 use App\DTO\Api\Solution\Request\SolutionSolveDTO;
 use App\DTO\Api\Solution\Request\SolutionVerifyDTO;
-use App\Models\Lesson;
 use App\Models\Program;
 use App\Services\Api\ProgramService;
 use Illuminate\Http\JsonResponse;
@@ -127,14 +125,7 @@ class ProgramController extends Controller
 
     public function list(): array
     {
-        $programs = Program::query()
-            ->with('users')
-            ->whereDoesntHave('users', function ($query) {
-                $query->where('user_id', auth()->id());
-            })
-            ->get();
-
-        return $this->programService->list($programs);
+        return $this->programService->list();
     }
 
     public function getExercises(int $id, int $lessonId): array

@@ -270,8 +270,25 @@ class ProgramService
         return response()->json(['message' => 'задание не найдено'], 404);
     }
 
-    public function list(Collection $program): array
+    public function list(): array
     {
+        $user = auth()->user();
+        if ($user?->roles->pluck('name')[0] === Roles::STUDENT->value) {
+            $program = Program::query()
+                ->with('users')
+                ->whereDoesntHave('users', function ($query) {
+                    $query->where('user_id', auth()->id());
+                })
+                ->get();
+        } else if ($user?->roles->pluck('name')[0] === Roles::TEACHER->value) {
+            $program = Program::query()
+                ->with('users')
+                ->whereHas('users', function ($query) {
+                    $query->where('user_id', auth()->id());
+                })
+                ->get();
+        }
+
         return ProgramShowDTO::collect($program)->toArray();
     }
 
