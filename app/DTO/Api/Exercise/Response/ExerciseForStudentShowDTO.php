@@ -18,10 +18,7 @@ class ExerciseForStudentShowDTO extends Data
         public ?string $type,
         public string $condition,
         public ?int $points,
-        public ?string $answer,
-        public ?string $mark,
-        public ?string $comment,
-        public ?string $status,
+        public ?array $solution,
     ){
     }
 
@@ -34,10 +31,12 @@ class ExerciseForStudentShowDTO extends Data
             $exercise->type,
             $exercise->condition,
             $exercise->points,
-            $solution ? $solution->answer : null,
-            $solution ? $solution->mark : null,
-            $solution ? $solution->comment : null,
-            $solution ? $solution->status?->value : SolutionStatus::IN_PROCESS->value,
+            $solution ? [
+                'answer' => $solution->answer,
+                'mark' => $solution->mark,
+                'comment' => $solution->comment,
+                'status' => $solution->status?->value,
+            ] : null
         );
     }
 }
