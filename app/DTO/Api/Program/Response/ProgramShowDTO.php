@@ -2,7 +2,6 @@
 
 namespace App\DTO\Api\Program\Response;
 
-use App\DTO\Api\User\Response\UserShowDTO;
 use App\Models\Program;
 use Illuminate\Support\Collection;
 use Spatie\LaravelData\Data;
@@ -23,7 +22,7 @@ class ProgramShowDTO extends Data
     ){
     }
 
-    public static function fromModel(\Illuminate\Database\Eloquent\Collection $program): self
+    public static function fromModel(Program $program): self
     {
         return new self(
             $program->id,
