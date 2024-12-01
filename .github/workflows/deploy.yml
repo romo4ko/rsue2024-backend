@@ -1,17 +1,15 @@
-name: DEPLOY
+name: DEPLOY-2022
 on:
-  workflow_run:
-    workflows: [ "CI-BUILD-TEST" ]
-    types:
-      - completed
+  push:
+    branches:
+      - main
 jobs:
   deploy:
-    if: github.ref == 'refs/heads/main' && github.event.workflow_run.conclusion == 'success'
     runs-on: [ ubuntu-latest ]
     steps:
       - uses: actions/checkout@v1
       - name: Push to server
-        uses: appleboy/ssh-action@master
+        uses: appleboy/ssh-action@v1.0.0
         with:
           host: ${{ secrets.SERVER_IP }}
           username: ${{ secrets.SERVER_USERNAME }}
@@ -19,6 +17,6 @@ jobs:
           script: |
             cd ${{ secrets.PROJECT_PATH }}
             git pull
-            composer install
+            php composer install
             php artisan migrate --force
             php artisan cache:clear
